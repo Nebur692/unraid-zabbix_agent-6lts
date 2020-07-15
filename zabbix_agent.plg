@@ -1,0 +1,287 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name                "zabbix_agent">
+<!ENTITY author              "fabianonline">
+<!ENTITY plgauthor           "fabianonline">
+<!ENTITY agent_version       "5.0.2">
+<!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/main">
+<!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
+<!ENTITY agentURL            "&baseURL;/zabbix_agentd-&agent_version;">
+<!ENTITY version             "2020-07-14">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;">
+
+<CHANGES>
+##&name;
+
+### 2020-07-14
+- Initial commit
+</CHANGES>
+
+<FILE Run="/bin/bash"><INLINE>
+echo "Installation of zabbix_agent plugin started."
+mkdir -p /boot/config/plugins/zabbix_agent/scripts
+if [ -e /boot/config/plugins/zabbix_agent/zabbix_agentd-&agent_version; ]; then
+	echo "Agent already exists. Using local files."
+else
+	echo "zabbix_agent version &agent_version; not found."
+	echo "Removing old files..."
+	rm /boot/config/plugins/zabbix_agent/zabbix_agentd-*
+	rm /boot/config/plugins/zabbix_agent/rc.zabbix_agentd
+	rm /boot/config/plugins/zabbix_agent/zabbix_agentd.conf
+	rm /boot/config/plugins/zabbix_agent/scripts/*
+	echo "Downloading &agentURL;..."
+	wget "&agentURL;" -O /boot/config/plugins/zabbix_agent/zabbix_agentd-&agent_version;
+fi	
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/rc.zabbix_agentd"><INLINE>
+<![CDATA[
+#!/bin/sh
+#
+# rc.zabbix_agentd      This shell script takes care of starting and stopping
+#               the Zabbix agent
+
+OPTIONS="-c /boot/config/plugins/zabbix_agent/zabbix_agentd.conf"
+
+start() {
+        if [ -x /usr/sbin/zabbix_agentd ]; then
+                echo -n "Starting zabbix_agentd: "
+                /usr/sbin/zabbix_agentd $OPTIONS
+                echo " /usr/sbin/zabbix_agentd $OPTIONS"
+        fi
+}
+
+stop() {
+        # Stop daemons.
+        COUNT=0
+        echo -n "Shutting down zabbix_agentd: "
+        while `killall zabbix_agentd 2>/dev/null`; do
+                echo -n "."
+                sleep 1
+                COUNT=$((COUNT+1))
+                if [ $COUNT -ge 30 ]; then
+                        killall -9 zabbix_agentd
+                        sleep 1
+                        break
+                fi
+        done
+        echo " DONE"
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        ;;
+esac
+
+]]>
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/zabbix_agentd.conf"><INLINE>
+<![CDATA[
+Server=0.0.0.0/0
+LogType=system
+AllowRoot=1
+StartAgents=1
+
+DenyKey=system.run[*]
+AllowKey=agent.*
+AllowKey=net.if.*
+AllowKey=net.if.*[*]
+AllowKey=proc.*
+AllowKey=proc.*[*]
+AllowKey=sensor[*]
+AllowKey=system.*
+AllowKey=system.*[*]
+AllowKey=vfs.dev.*
+AllowKey=vfs.dev.*[*]
+AllowKey=vfs.fs.*
+AllowKey=vfs.fs.*[*]
+AllowKey=vm.memory.size[*]
+AllowKey=unraid.*
+AllowKey=unraid.*[*]
+
+DenyKey=*
+
+UserParameter=unraid.disks.discovery,/usr/local/emhttp/plugins/zabbix_agent/scripts/disks.discovery.sh
+UserParameter=unraid.disk[*],/usr/local/emhttp/plugins/zabbix_agent/scripts/disk.sh "$1"
+UserParameter=unraid.qemu.discovery,/usr/local/emhttp/plugins/zabbix_agent/scripts/qemu.discovery.sh
+UserParameter=unraid.qemu[*],/usr/local/emhttp/plugins/zabbix_agent/scripts/qemu.sh "$1"
+
+]]>
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/scripts/disks.discovery.sh"><INLINE>
+<![CDATA[
+#!/bin/bash
+id='""'
+device='""'
+first=1
+
+echo -n '['
+
+while IFS="=" read key value; do
+	if [ "$key" = "id" ] && [ -n "$value" ] && [ "$value" != '""' ]; then
+		[ $first = 0 ] && echo -n ","
+		first=0
+		echo -n '{"{#ID}":'$value'}'
+	fi
+done < /var/local/emhttp/disks.ini
+
+echo ']'
+
+]]>
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/scripts/disk.sh"><INLINE>
+<![CDATA[
+#!/bin/bash
+
+id="$1"
+found=0
+device=""
+
+while read line; do
+	if [[ $line == "["* ]]; then
+		if [ $found = 1 ]; then
+			echo -n '{"device":"'$device'", "name":"'$name'", "status":"'$status'", "temp":'$temp', "size":'$size', "num_reads":'$num_reads', '
+			echo -n '"num_writes":'$num_writes', "num_errors":'$num_errors', "type":"'$type'", "fs_size":'$fsSize', "fs_free":'$fsFree', '
+			break
+		else
+			device=''
+			name=''
+			status=''
+			temp=-1
+			size=-1
+			num_reads=-1
+			num_writes=-1
+			num_errors=-1
+			type=""
+			fsSize=-1
+			fsFree=-1
+		fi
+	else
+		while IFS="=" read key value; do
+			value="${value%\"}"
+			value="${value#\"}"
+			[ $key = "id" ] && [ "$value" = "$id" ] && found=1
+			[ $key = "device" ] && device="$value"
+			[ $key = "name" ] && name="$value"
+			[ $key = "status" ] && status="$value"
+			[ $key = "temp" ] && [ "$value" != "*" ] && temp="$value"
+			[ $key = "size" ] && size=$(( $value * 1024 ))
+			[ $key = "numReads" ] && num_reads="$value"
+			[ $key = "numWrites" ] && num_writes="$value"
+			[ $key = "numErrors" ] && num_errors="$value"
+			[ $key = "type" ] && type="$value"
+			[ $key = "fsSize" ] && fsSize=$(( $value * 1024 ))
+			[ $key = "fsFree" ] && fsFree=$(( $value * 1024 ))
+		done <<< "$line"
+	fi
+done < <(cat /var/local/emhttp/disks.ini ; echo "[empty]")
+
+if [ $found = 0 ]; then
+	echo "UNSUPPORTED"
+	exit 1
+fi
+
+read bytes_read bytes_written _ < <(grep $device"=" /var/local/emhttp/diskload.ini | cut -d"=" -f2)
+echo '"bytes_reading":'$bytes_read', "bytes_writing":'$bytes_written'}'
+
+]]>
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/scripts/qemu.discovery.sh"><INLINE>
+<![CDATA[
+#!/bin/bash
+first=1
+
+echo -n "["
+while read name; do
+	[ "$name" = "" ] && continue
+	[ $first = 0 ] && echo -n ","
+	first=0
+	echo -n '{"{#VM}":"'$name'"}'
+done < <(virsh list --name --all)
+echo "]"
+
+]]>
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/scripts/qemu.sh"><INLINE>
+<![CDATA[
+#!/bin/bash
+VM="$1"
+
+echo -n '{'
+state=`virsh domstate "$VM"`
+echo -n '"state":"'$state'"'
+if [ "$state" != "running" ]; then
+	echo -n '}'
+	exit
+fi
+
+while IFS=":" read key value; do
+	[ "$key" = "CPU(s)" ] && echo -n ', "cpus":'$value
+	[ "$key" = "CPU time" ] && echo -n ', "cpu_time":'${value%s}
+	[ "$key" = "Max memory" ] && echo -n ', "memory_max":'$((${value%KiB} * 1024))
+	[ "$key" = "Used memory" ] && echo -n ', "memory_used":'$((${value%KiB} * 1024))
+done < <(virsh dominfo "$VM")
+
+while read if key value; do
+	[ "$key" = "rx_bytes" ] && echo -n ', "network_bytes_in":'$value
+	[ "$key" = "tx_bytes" ] && echo -n ', "network_bytes_out":'$value
+done < <(virsh domifstat "$VM" vnet0)
+
+echo "}"
+
+]]>
+</INLINE></FILE>
+
+<FILE Run="/bin/bash"><INLINE>
+cp /boot/config/plugins/zabbix_agent/rc.zabbix_agentd /etc/rc.d/rc.zabbix_agentd
+chmod +x /etc/rc.d/rc.zabbix_agentd
+
+mkdir -p /usr/local/emhttp/plugins/zabbix_agent/scripts
+cp -R /boot/config/plugins/zabbix_agent/scripts/* /usr/local/emhttp/plugins/zabbix_agent/scripts/
+chmod +x /usr/local/emhttp/plugins/zabbix_agent/scripts/*
+
+/etc/rc.d/rc.zabbix_agentd stop
+
+cp /boot/config/plugins/zabbix_agent/zabbix_agentd-&agent_version; /usr/sbin/zabbix_agentd
+chmod +x /usr/sbin/zabbix_agentd
+
+/etc/rc.d/rc.zabbix_agentd start
+</INLINE></FILE>
+
+
+<!--- Uninstall -->
+
+<FILE Run="/bin/bash" Method="remove"><INLINE>
+echo "Removal of zabbix_agent plugin started."
+echo "Stopping zabbix_agentd..."
+/etc/rc.d/rc.zabbix_agentd stop
+echo "Deleting /usr/sbin/zabbix_agentd..."
+rm /usr/sbin/zabbix_agentd
+echo "Deleting /boot/config/plugins/zabbix_agent..."
+rm -rf /boot/config/plugins/zabbix_agent
+echo "Deleting /usr/local/emhttp/plugins/zabbix_agent..."
+rm -rf /usr/local/emhttp/plugins/zabbix_agent
+echo "Removal of zabbix_agent plugin completed."
+</INLINE></FILE>
+
+</PLUGIN>

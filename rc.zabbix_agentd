@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# rc.zabbix_agentd      This shell script takes care of starting and stopping
+#               the Zabbix agent
+
+OPTIONS="-c /boot/config/plugins/zabbix_agent/zabbix_agentd.conf"
+
+start() {
+        if [ -x /usr/sbin/zabbix_agentd ]; then
+                echo -n "Starting zabbix_agentd: "
+                /usr/sbin/zabbix_agentd $OPTIONS
+                echo " /usr/sbin/zabbix_agentd $OPTIONS"
+        fi
+}
+
+stop() {
+        # Stop daemons.
+        COUNT=0
+        echo -n "Shutting down zabbix_agentd: "
+        while `killall zabbix_agentd 2>/dev/null`; do
+                echo -n "."
+                sleep 1
+                COUNT=$((COUNT+1))
+                if [ $COUNT -ge 30 ]; then
+                        killall -9 zabbix_agentd
+                        sleep 1
+                        break
+                fi
+        done
+        echo " DONE"
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        ;;
+esac
