@@ -7,8 +7,9 @@ device=""
 while read line; do
 	if [[ $line == "["* ]]; then
 		if [ $found = 1 ]; then
+			[ $fsFree -ge 0 ] && [ $fsSize -ge 0 ] && fsUsed=$(( $fsSize - $fsFree ))
 			echo -n '{"device":"'$device'", "name":"'$name'", "status":"'$status'", "temp":'$temp', "size":'$size', "num_reads":'$num_reads', '
-			echo -n '"num_writes":'$num_writes', "num_errors":'$num_errors', "type":"'$type'", "fs_size":'$fsSize', "fs_free":'$fsFree', '
+			echo -n '"num_writes":'$num_writes', "num_errors":'$num_errors', "type":"'$type'", "fs_size":'$fsSize', "fs_free":'$fsFree', "fs_used":'$fsUsed', '
 			break
 		else
 			device=''
@@ -22,6 +23,7 @@ while read line; do
 			type=""
 			fsSize=-1
 			fsFree=-1
+			fsUsed=-1
 		fi
 	else
 		while IFS="=" read key value; do

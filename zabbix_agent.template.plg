@@ -24,17 +24,21 @@
 echo "Installation of zabbix_agent plugin started."
 mkdir -p /boot/config/plugins/zabbix_agent/scripts
 if [ -e /boot/config/plugins/zabbix_agent/zabbix_agentd-&agent_version; ]; then
-	echo "Agent already exists. Using local files."
+	echo "Agent already exists. Using local file."
 else
 	echo "zabbix_agent version &agent_version; not found."
-	echo "Removing old files..."
+	echo "Removing old agents..."
 	rm /boot/config/plugins/zabbix_agent/zabbix_agentd-*
-	rm /boot/config/plugins/zabbix_agent/rc.zabbix_agentd
-	rm /boot/config/plugins/zabbix_agent/zabbix_agentd.conf
-	rm /boot/config/plugins/zabbix_agent/scripts/*
 	echo "Downloading &agentURL;..."
 	wget "&agentURL;" -O /boot/config/plugins/zabbix_agent/zabbix_agentd-&agent_version;
-fi	
+fi
+
+echo "Removing old support files..."
+rm /boot/config/plugins/zabbix_agent/rc.zabbix_agentd
+rm /boot/config/plugins/zabbix_agent/zabbix_agentd.conf
+rm /boot/config/plugins/zabbix_agent/scripts/*
+
+echo "Installing new support files..."	
 </INLINE></FILE>
 
 <FILE Name="/boot/config/plugins/zabbix_agent/rc.zabbix_agentd"><INLINE>
@@ -58,6 +62,12 @@ fi
 <FILE Name="/boot/config/plugins/zabbix_agent/scripts/disk.sh"><INLINE>
 <![CDATA[
 {{{ scripts/disk.sh }}}
+]]>
+</INLINE></FILE>
+
+<FILE Name="/boot/config/plugins/zabbix_agent/scripts/disks.totals.sh"><INLINE>
+<![CDATA[
+{{{ scripts/disks.totals.sh }}}
 ]]>
 </INLINE></FILE>
 
