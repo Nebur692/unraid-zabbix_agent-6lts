@@ -16,9 +16,10 @@ while IFS=":" read key value; do
 	[ "$key" = "Used memory" ] && echo -n ', "memory_used":'$((${value%KiB} * 1024))
 done < <(virsh dominfo "$VM")
 
+read interface _ < <(virsh domiflist "$VM" | head -n3 | tail -n1)
 while read if key value; do
 	[ "$key" = "rx_bytes" ] && echo -n ', "network_bytes_in":'$value
 	[ "$key" = "tx_bytes" ] && echo -n ', "network_bytes_out":'$value
-done < <(virsh domifstat "$VM" vnet0)
+done < <(virsh domifstat "$VM" "$interface")
 
 echo "}"
