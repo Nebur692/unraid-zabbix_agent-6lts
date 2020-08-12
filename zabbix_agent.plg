@@ -7,7 +7,7 @@
 <!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
 <!ENTITY version             "2020.08.11">
-<!ENTITY packageName         "zabbix_agent-&version;.package.tgz">
+<!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
 <!ENTITY packageMD5          "dcf2e2bef5f4f88876ac52ed5ca1046c">
 ]>
@@ -55,8 +55,9 @@ if [ -x /etc/rc.d/rc.zabbix_agentd ]; then
 fi
 
 echo "Extracting support files..."
-tar -xzvf /boot/config/plugins/zabbix_agent/&packageName; --strip=1 -C /
+upgradepkg --install-new /boot/config/plugins/zabbix_agent/&packageName;
 
+echo "Starting zabbix_agent..."
 /etc/rc.d/rc.zabbix_agentd start
 </INLINE></FILE>
 
@@ -67,14 +68,13 @@ tar -xzvf /boot/config/plugins/zabbix_agent/&packageName; --strip=1 -C /
 echo "Removal of zabbix_agent plugin started."
 echo "Stopping zabbix_agentd..."
 /etc/rc.d/rc.zabbix_agentd stop
-echo "Deleting /usr/sbin/zabbix_agentd..."
-rm /usr/sbin/zabbix_agentd
-echo "Deleting /etc/rc.d/rc.zabbix_agentd..."
-rm /etc/rc.d/rc.zabbix_agentd
-echo "Deleting /boot/config/plugins/zabbix_agent/..."
-rm -rf /boot/config/plugins/zabbix_agent/
-echo "Deleting /usr/local/emhttp/plugins/zabbix_agent/..."
-rm -rf /usr/local/emhttp/plugins/zabbix_agent/
+
+echo "Uninstalling package..."
+removepkg zabbix_agent
+
+echo "Removing remaining plugin files..."
+rm -rf /boot/config/plugins/zabbix_agent
+
 echo "Removal of zabbix_agent plugin completed."
 </INLINE></FILE>
 

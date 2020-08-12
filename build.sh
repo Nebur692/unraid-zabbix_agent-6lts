@@ -1,6 +1,6 @@
 #!/bin/bash
 VERSION=`xpath -q -e 'string(//PLUGIN/@version)' zabbix_agent.plg`
-FILE="zabbix_agent-$VERSION.package.tgz"
+FILE="zabbix_agent-$VERSION-x86_64-1.txz"
 echo "Version in plugin file: $VERSION"
 echo "Generated file will be: $FILE"
 
@@ -29,7 +29,7 @@ read
 
 echo "Creating $FILE..."
 echo
-tar -czvf "$FILE" files
+tar -cv --owner=root --group=root --lzma -C files -f "$FILE" .
 echo
 read md5 _ < <(md5sum "$FILE")
 echo "MD5 of the resulting file for the plugin file: $md5"
