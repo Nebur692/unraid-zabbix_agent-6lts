@@ -6,25 +6,29 @@
 <!ENTITY plgauthor           "fabianonline">
 <!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2020.07.16">
+<!ENTITY version             "2020.08.11">
 <!ENTITY packageName         "zabbix_agent-&version;.package.tgz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "2740e36b05204d8f9be5be853cc105cd">
+<!ENTITY packageMD5          "dcf2e2bef5f4f88876ac52ed5ca1046c">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;">
+<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
 
 <CHANGES>
 ##&name;
 
-### 2020-07-16
+### 2020.08.11
+- Added system temperature metrics. Note: These will only work if you have the Dynamix System Temperature plugin installed.
+- Fixed the virtual interface detection in unraid.qemu.
+
+### 2020.07.16
 - Package based installation process.
 - Added a zabbix template file.
 
-### 2020-07-15
+### 2020.07.15
 - More metrics
 
-### 2020-07-14
+### 2020.07.14
 - Initial commit
 </CHANGES>
 
