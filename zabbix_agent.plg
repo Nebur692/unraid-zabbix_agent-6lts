@@ -6,10 +6,10 @@
 <!ENTITY plgauthor           "fabianonline">
 <!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2020.08.11.1">
+<!ENTITY version             "2020.08.22.1">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "5eedea739129f638ac5098945039d43b">
+<!ENTITY packageMD5          "1aae2b12fb6827c934d1e70c9c7ab15a">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
