@@ -5,18 +5,21 @@ echo "Version in plugin file: $VERSION"
 echo "Generated file will be: $FILE"
 
 if [ -e "$FILE" ]; then
+	echo
 	echo "File already exists."
 	
 	givenMD5=`xpath -q -e 'string(//PLUGIN/@packageMD5)' zabbix_agent.plg`
 	read currentMD5 _ < <(md5sum "$FILE")
 	
 	if [ "$givenMD5" = "$currentMD5" ]; then
-		echo "MD5 value matches."
+		echo "MD5 value is OK."
 	else
 		echo "MD5 value does not match!"
 		echo "unraid_zabbix.plg: $givenMD5"
 		echo "$FILE: $currentMD5"
 	fi
+	
+	echo
 	
 	if [ "$1" != "--force" ]; then
 		echo "Stopping now. Call '$0 --force' to force recreating the file."
