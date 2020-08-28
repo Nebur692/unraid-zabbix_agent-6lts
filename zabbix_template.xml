@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-07-17T03:56:57Z</date>
+    <date>2020-08-28T19:01:50Z</date>
     <groups>
         <group>
-            <name>Servers</name>
+            <name>Templates</name>
         </group>
     </groups>
     <templates>
@@ -13,7 +13,7 @@
             <name>Unraid server</name>
             <groups>
                 <group>
-                    <name>Servers</name>
+                    <name>Templates</name>
                 </group>
             </groups>
             <applications>
@@ -25,6 +25,9 @@
                 </application>
                 <application>
                     <name>Memory</name>
+                </application>
+                <application>
+                    <name>System</name>
                 </application>
                 <application>
                     <name>VMs</name>
@@ -228,6 +231,63 @@
                     </preprocessing>
                     <master_item>
                         <key>unraid.disks.totals</key>
+                    </master_item>
+                </item>
+                <item>
+                    <name>Temperature data</name>
+                    <key>unraid.temperatures</key>
+                    <delay>2m</delay>
+                    <history>1d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <applications>
+                        <application>
+                            <name>System</name>
+                        </application>
+                    </applications>
+                </item>
+                <item>
+                    <name>Temperature CPU</name>
+                    <type>DEPENDENT</type>
+                    <key>unraid.temperatures[cpu]</key>
+                    <delay>0</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>°C</units>
+                    <applications>
+                        <application>
+                            <name>System</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <params>$.cpu</params>
+                        </step>
+                    </preprocessing>
+                    <master_item>
+                        <key>unraid.temperatures</key>
+                    </master_item>
+                </item>
+                <item>
+                    <name>Temperature Mainboard</name>
+                    <type>DEPENDENT</type>
+                    <key>unraid.temperatures[mainboard]</key>
+                    <delay>0</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>°C</units>
+                    <applications>
+                        <application>
+                            <name>System</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <params>$.mainboard</params>
+                        </step>
+                    </preprocessing>
+                    <master_item>
+                        <key>unraid.temperatures</key>
                     </master_item>
                 </item>
                 <item>
