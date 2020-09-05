@@ -9,7 +9,7 @@ while read line; do
 		if [ $found = 1 ]; then
 			[ $fsFree -ge 0 ] && [ $fsSize -ge 0 ] && fsUsed=$(( $fsSize - $fsFree ))
 			echo -n '{"device":"'$device'", "name":"'$name'", "status":"'$status'", "temp":'$temp', "size":'$size', "num_reads":'$num_reads', '
-			echo -n '"num_writes":'$num_writes', "num_errors":'$num_errors', "type":"'$type'", "fs_size":'$fsSize', "fs_free":'$fsFree', "fs_used":'$fsUsed', '
+			echo -n '"num_writes":'$num_writes', "num_errors":'$num_errors', "type":"'$type'", "fs_size":'$fsSize', "fs_free":'$fsFree', "fs_used":'$fsUsed', "running":'$running', '
 			break
 		else
 			device=''
@@ -24,6 +24,7 @@ while read line; do
 			fsSize=-1
 			fsFree=-1
 			fsUsed=-1
+			running=-1
 		fi
 	else
 		while IFS="=" read key value; do
@@ -41,6 +42,12 @@ while read line; do
 			[ $key = "type" ] && type="$value"
 			[ $key = "fsSize" ] && fsSize=$(( $value * 1024 ))
 			[ $key = "fsFree" ] && fsFree=$(( $value * 1024 ))
+			if [ $key = "color" ]; then
+				case "$value" in
+					green-on) running=1;;
+					green-blink) running=0;;
+				esac
+			fi
 		done <<< "$line"
 	fi
 done < <(cat /var/local/emhttp/disks.ini ; echo "[empty]")
