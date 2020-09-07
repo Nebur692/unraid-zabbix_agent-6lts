@@ -15,7 +15,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
 
 <CHANGES>
-##&name;
+## &name;
+
+### &version;
+- Updated zabbix_agentd from 5.0.2 to 5.0.3
+
+### 2020.09.05.1
+- Added a new field 'running' to qemu.disk
 
 ### 2020.08.11
 - Added system temperature metrics. Note: These will only work if you have the Dynamix System Temperature plugin installed.
