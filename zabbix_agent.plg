@@ -6,10 +6,10 @@
 <!ENTITY plgauthor           "fabianonline">
 <!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/stable">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2020.09.05.1">
+<!ENTITY version             "2020.10.31.1">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "14e3dd2d08af436deafc8f924b61e958">
+<!ENTITY packageMD5          "33d8467dcd13471cc08e0f56e4b611df">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -17,7 +17,7 @@
 <CHANGES>
 ## &name;
 
-### &version;
+### 2010.10.31.1
 - Updated zabbix_agentd from 5.0.2 to 5.0.3
 - Download updated plugins from stable instead of main.
 - Fixed removal of old plugin packages during updates.
