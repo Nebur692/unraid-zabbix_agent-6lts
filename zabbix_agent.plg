@@ -4,7 +4,7 @@
 <!ENTITY name                "zabbix_agent">
 <!ENTITY author              "fabianonline">
 <!ENTITY plgauthor           "fabianonline">
-<!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/main">
+<!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/stable">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
 <!ENTITY version             "2020.09.05.1">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
@@ -19,6 +19,7 @@
 
 ### &version;
 - Updated zabbix_agentd from 5.0.2 to 5.0.3
+- Download updated plugins from stable instead of main.
 
 ### 2020.09.05.1
 - Added a new field 'running' to qemu.disk
