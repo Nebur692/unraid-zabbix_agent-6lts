@@ -37,3 +37,5 @@ echo
 read md5 _ < <(md5sum "$FILE")
 echo "MD5 of the resulting file for the plugin file: $md5"
 echo "Run this tool again to validate the MD5 value from the plugin file."
+echo
+echo "Please remember to fill the changelog in zabbix_agent.plg."
