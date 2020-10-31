@@ -20,6 +20,7 @@
 ### &version;
 - Updated zabbix_agentd from 5.0.2 to 5.0.3
 - Download updated plugins from stable instead of main.
+- Fixed removal of old plugin packages during updates.
 - Added new zabbix endpoint unraid.ups
 
 ### 2020.09.05.1
@@ -46,7 +47,7 @@ if [ -e /boot/config/plugins/zabbix_agent/&packageName; ]; then
 	echo "Package already exists."
 else
 	echo "Current &packageName; not found; removing old packages (if existing)."
-	rm /boot/config/plugins/zabbix_agent/*.package.tgz
+	rm /boot/config/plugins/zabbix_agent/*.txz
 	echo "Downloading current package..."
 fi
 </INLINE></FILE>
