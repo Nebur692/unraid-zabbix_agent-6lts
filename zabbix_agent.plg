@@ -20,6 +20,7 @@
 ### &version;
 - Updated zabbix_agentd from 5.0.2 to 5.0.3
 - Download updated plugins from stable instead of main.
+- Added new zabbix endpoint unraid.ups
 
 ### 2020.09.05.1
 - Added a new field 'running' to qemu.disk
