@@ -17,12 +17,13 @@
 <CHANGES>
 ## &name;
 
-### version
+### &version;
 - You can now add a custom zabbix agent configuration file at /boot/config/plugins/zabbix_agent/zabbix_agentd.custom.conf.
   It won't be overwritten by a future update of this plugin. Please note that the list of usable keys is heavily restricted
   in zabbix_agentd.conf. To have your custom UserParameters accessible, you can either:
   - Name them custom.$whatever.
   - Add the key to the whitelist via AllowKey.
+- Updated zabbix_agentd from 5.0.3 to 5.2.1.
 
 ### 2010.10.31.1
 - Updated zabbix_agentd from 5.0.2 to 5.0.3
