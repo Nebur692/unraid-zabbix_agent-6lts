@@ -6,10 +6,10 @@
 <!ENTITY plgauthor           "fabianonline">
 <!ENTITY baseURL             "https://git.schle.nz/fabian/unraid-zabbix_agent/raw/branch/stable">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2020.11.25.1">
+<!ENTITY version             "2024.12.19.1">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "461b54aefdcad0e23d9da9c0047cb6c7">
+<!ENTITY packageMD5          "6e3a4e4b7712ec531a6da1ff946cf0a2">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -17,7 +17,11 @@
 <CHANGES>
 ## &name;
 
-### &version;
+### 2024.12.19.1
+- Sometimes, diskload.ini is not available (at least in Unraid 6.12.6). In that case we now skip omitting disk load data
+  in order to still omit valid JSON.
+
+### 2020.11.25.1
 - You can now add a custom zabbix agent configuration file at /boot/config/plugins/zabbix_agent/zabbix_agentd.custom.conf.
   It won't be overwritten by a future update of this plugin. Please note that the list of usable keys is heavily restricted
   in zabbix_agentd.conf. To have your custom UserParameters accessible, you can either:
@@ -25,7 +29,7 @@
   - Add the key to the whitelist via AllowKey.
 - Updated zabbix_agentd from 5.0.3 to 5.2.1.
 
-### 2010.10.31.1
+### 2020.10.31.1
 - Updated zabbix_agentd from 5.0.2 to 5.0.3
 - Download updated plugins from stable instead of main.
 - Fixed removal of old plugin packages during updates.
