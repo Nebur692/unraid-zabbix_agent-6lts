@@ -57,5 +57,9 @@ if [ $found = 0 ]; then
 	exit 1
 fi
 
-read bytes_read bytes_written _ < <(grep $device"=" /var/local/emhttp/diskload.ini | cut -d"=" -f2)
-echo '"bytes_reading":'$bytes_read', "bytes_writing":'$bytes_written'}'
+if [ -e /var/local/emhttp/diskload.ini ]; then
+	read bytes_read bytes_written _ < <(grep $device"=" /var/local/emhttp/diskload.ini | cut -d"=" -f2)
+	echo '"bytes_reading":'$bytes_read', "bytes_writing":'$bytes_written'}'
+else
+	echo '"diskload_missing":1}'
+fi
