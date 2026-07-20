@@ -143,8 +143,11 @@ TLS: <code><?=$tlsEnable ? t('on','activado') : t('off','desactivado')?></code>
 <div class="zbx-box">
 <h4><?=t('Logs', 'Logs')?></h4>
 
+<dl>
+<dt><?=t('Live log (syslog):', 'Log en vivo (syslog):')?></dt>
+<dd><a onclick="openZabbixSyslogTerminal()" style="cursor:pointer;"><i class="fa fa-terminal"></i> <u><?=t('View live logs — no setup needed', 'Ver logs en vivo — sin configurar nada')?></u></a></dd>
+</dl>
 <blockquote class="inline_help">
-<a onclick="openZabbixSyslogTerminal()" style="cursor:pointer;"><i class="fa fa-terminal"></i> <u><?=t('View live logs (from syslog, no setup needed)', 'Ver logs en vivo (desde syslog, sin configurar nada)')?></u></a><br>
 <?=t(
 'Follows this agent\'s existing syslog output in real time — works right now, no need to change anything below.',
 'Sigue en tiempo real lo que este agente ya manda al syslog — funciona ahora mismo, sin necesidad de cambiar nada de abajo.'
@@ -160,13 +163,16 @@ TLS: <code><?=$tlsEnable ? t('on','activado') : t('off','desactivado')?></code>
 'Sets LogType=file / LogFile='.$agentLogFile.'. Only useful if you want the agent\'s logs isolated from the rest of syslog. Off by default so simply saving other fields doesn\'t change where logs go.',
 'Pone LogType=file / LogFile='.$agentLogFile.'. Solo útil si quieres los logs del agente aislados del resto del syslog. Desactivado por defecto para que guardar otros campos no cambie dónde van los logs.'
 )?>
-<br>
-<?if ($agentLogExists):?>
-<a onclick="openTerminal('log','zabbix_agent','zabbix_agentd.log')" style="cursor:pointer;"><i class="fa fa-book"></i> <u><?=t('View live logs (dedicated file)', 'Ver logs en vivo (fichero propio)')?></u></a>
-<?else:?>
-<span class="dim-text"><?=t('Enable the option above and click Apply first to create the log file.', 'Activa la opción de arriba y pulsa Aplicar primero para crear el fichero de log.')?></span>
-<?endif;?>
 </blockquote>
+
+<?if ($agentLogExists):?>
+<dl>
+<dt><?=t('Live log (dedicated file):', 'Log en vivo (fichero propio):')?></dt>
+<dd><a onclick="openTerminal('log','zabbix_agent','zabbix_agentd.log')" style="cursor:pointer;"><i class="fa fa-book"></i> <u><?=t('View live logs', 'Ver logs en vivo')?></u></a></dd>
+</dl>
+<?else:?>
+<blockquote class="inline_help"><span class="dim-text"><?=t('Enable the option above and click Apply first to create the log file.', 'Activa la opción de arriba y pulsa Aplicar primero para crear el fichero de log.')?></span></blockquote>
+<?endif;?>
 </div>
 
 <div class="zbx-box">

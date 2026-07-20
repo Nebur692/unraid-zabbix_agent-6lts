@@ -7,10 +7,10 @@
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.21.1">
+<!ENTITY version             "2026.07.21.2">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "e1655385d23876a5852a6480a1dacaf2">
+<!ENTITY packageMD5          "92982089cd78b8cbb91c7b861cbc9e8c">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -51,6 +51,17 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
   cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
   Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
   instalable, así que no hizo falta subir de versión.
+
+### 2026.07.21.2
+- Fixed: the "View live logs" links (both the zero-setup syslog one and the dedicated-file one) were
+  invisible, because they were placed inside inline-help blockquote elements — Unraid hides those by
+  default (display:none, only shown via the page's Help toggle). Moved both links into regular,
+  always-visible rows; only the descriptive help text stays in the hidden blockquote.
+
+- Arreglado: los enlaces "Ver logs en vivo" (tanto el de syslog sin configurar nada como el del
+  fichero propio) eran invisibles, porque estaban dentro de bloques de ayuda (blockquote) — Unraid los
+  oculta por defecto (display:none, solo se ven activando la ayuda de la página). Se movieron ambos
+  enlaces a filas normales, siempre visibles; solo el texto explicativo se queda en el bloque oculto.
 
 ### 2026.07.21.1
 - Settings page: light visual polish — each section is now grouped in a bordered box, and a status
