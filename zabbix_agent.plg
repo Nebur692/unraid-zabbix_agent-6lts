@@ -4,15 +4,16 @@
 <!ENTITY name                "zabbix_agent">
 <!ENTITY author              "Nebur692 (fork of fabianonline)">
 <!ENTITY plgauthor           "Nebur692">
+<!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.20.5">
+<!ENTITY version             "2026.07.20.6">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "4b6ea4dcde66fb3ccf696ec6aa7fc5fe">
+<!ENTITY packageMD5          "41ca6baceef99f21dc43aa8385e55eed">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
 
 <CHANGES>
 ## &name; (6lts fork)
@@ -24,6 +25,20 @@ long-standing bugs. All credit for the original plugin design goes to fabianonli
 Este es un fork de [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabian/unraid-zabbix_agent),
 mantenido aquí para dejar el agente empaquetado en la rama Zabbix 6.0 LTS y arreglar un par de bugs de
 larga duración. Todo el crédito del diseño original del plugin es de fabianonline.
+
+### 2026.07.20.6
+- The plugin now links directly to its Settings page from the Plugins tab (added `launch=`).
+- Added a live syslog log viewer that works immediately, with no setup: a "View live logs (from
+  syslog, no setup needed)" link on the Settings page follows the agent's existing syslog output in
+  real time. This is in addition to the dedicated-file viewer from 2026.07.20.5, which is still there
+  for anyone who wants Zabbix's logs isolated from the rest of syslog.
+
+- El plugin ahora enlaza directamente a su página de Settings desde la pestaña Plugins (añadido
+  `launch=`).
+- Añadido un visor de logs de syslog en vivo que funciona sin configurar nada: un enlace "Ver logs en
+  vivo (desde syslog, sin configurar nada)" en la página de Settings sigue en tiempo real lo que el
+  agente ya manda a syslog. Esto se suma al visor de fichero propio de 2026.07.20.5, que sigue
+  disponible para quien quiera los logs de Zabbix aislados del resto del syslog.
 
 ### 2026.07.20.5
 - Added a live log viewer to the Settings page: a new "Log to a dedicated file" checkbox (off by

@@ -1,0 +1,4 @@
+#!/bin/bash
+# Live-follows syslog, filtered to this agent's own lines, without requiring
+# LogType=file. Used by the Settings page's "View live logs" (syslog) link.
+exec tail -f -n 200 /var/log/syslog | grep --line-buffered -iE 'zabbix_agentd|zabbix_agent:'

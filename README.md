@@ -31,6 +31,9 @@ authorship over the base plugin.
   falls back to English).
 - Added a live log viewer: an opt-in "Log to a dedicated file" checkbox, and once enabled, a "View live
   logs" link that opens Unraid's native live terminal (same mechanism as Docker/VMs/NUT) on the agent's log.
+- Added a second, zero-setup live log viewer that follows the agent's existing syslog output directly —
+  no need to enable file logging first.
+- The plugin now links directly to its Settings page when clicked from the Plugins tab.
 
 ### Compatibility
 
@@ -88,6 +91,9 @@ reclamar autoría del plugin base.
 - Añadido un visor de logs en vivo: una casilla opcional "Log a un fichero propio", y una vez activada, un
   enlace "Ver logs en vivo" que abre el terminal en vivo nativo de Unraid (mismo mecanismo que Docker/VMs/NUT)
   sobre el log del agente.
+- Añadido un segundo visor de logs en vivo sin configurar nada: sigue directamente lo que el agente ya manda
+  a syslog, sin necesidad de activar antes el log a fichero.
+- El plugin ahora enlaza directamente a su página de Settings al hacer clic desde la pestaña Plugins.
 
 ### Compatibilidad
 

@@ -105,6 +105,33 @@ $agentLogExists   = file_exists($agentLogFile);
 <dd><input type="text" name="TIMEOUT" class="narrow" value="<?=$timeout?>"></dd>
 </dl>
 
+<h4><?=t('Logs', 'Logs')?></h4>
+
+<blockquote class="inline_help">
+<a onclick="openZabbixSyslogTerminal()" style="cursor:pointer;"><i class="fa fa-terminal"></i> <u><?=t('View live logs (from syslog, no setup needed)', 'Ver logs en vivo (desde syslog, sin configurar nada)')?></u></a><br>
+<?=t(
+'Follows this agent\'s existing syslog output in real time — works right now, no need to change anything below.',
+'Sigue en tiempo real lo que este agente ya manda al syslog — funciona ahora mismo, sin necesidad de cambiar nada de abajo.'
+)?>
+</blockquote>
+
+<dl>
+<dt><?=t('Log to a dedicated file instead:', 'Log a un fichero propio en vez de syslog:')?></dt>
+<dd><input type="checkbox" name="LOG_TO_FILE" value="1" <?=$logToFile ? 'checked' : ''?>></dd>
+</dl>
+<blockquote class="inline_help">
+<?=t(
+'Sets LogType=file / LogFile='.$agentLogFile.'. Only useful if you want the agent\'s logs isolated from the rest of syslog. Off by default so simply saving other fields doesn\'t change where logs go.',
+'Pone LogType=file / LogFile='.$agentLogFile.'. Solo útil si quieres los logs del agente aislados del resto del syslog. Desactivado por defecto para que guardar otros campos no cambie dónde van los logs.'
+)?>
+<br>
+<?if ($agentLogExists):?>
+<a onclick="openTerminal('log','zabbix_agent','zabbix_agentd.log')" style="cursor:pointer;"><i class="fa fa-book"></i> <u><?=t('View live logs (dedicated file)', 'Ver logs en vivo (fichero propio)')?></u></a>
+<?else:?>
+<span class="dim-text"><?=t('Enable the option above and click Apply first to create the log file.', 'Activa la opción de arriba y pulsa Aplicar primero para crear el fichero de log.')?></span>
+<?endif;?>
+</blockquote>
+
 <h4><?=t('Advanced', 'Avanzado')?></h4>
 
 <dl>
@@ -116,23 +143,6 @@ $agentLogExists   = file_exists($agentLogFile);
 'Sets StartAgents=0, fully turning off the agent\'s listening port (10050). Only enable this if you rely exclusively on active checks.',
 'Pone StartAgents=0, desactivando por completo el puerto de escucha del agente (10050). Actívalo solo si usas exclusivamente active checks.'
 )?>
-</blockquote>
-
-<dl>
-<dt><?=t('Log to a dedicated file:', 'Log a un fichero propio:')?></dt>
-<dd><input type="checkbox" name="LOG_TO_FILE" value="1" <?=$logToFile ? 'checked' : ''?>></dd>
-</dl>
-<blockquote class="inline_help">
-<?=t(
-'Sets LogType=file / LogFile='.$agentLogFile.' instead of the default syslog. Required for the live log viewer below. Off by default so simply saving other fields doesn\'t change where logs go.',
-'Pone LogType=file / LogFile='.$agentLogFile.' en vez del syslog por defecto. Necesario para el visor de logs en vivo de abajo. Desactivado por defecto para que guardar otros campos no cambie dónde van los logs.'
-)?>
-<br>
-<?if ($agentLogExists):?>
-<a onclick="openTerminal('log','zabbix_agent','zabbix_agentd.log')" style="cursor:pointer;"><i class="fa fa-book"></i> <u><?=t('View live logs', 'Ver logs en vivo')?></u></a>
-<?else:?>
-<span class="dim-text"><?=t('Enable the option above and click Apply first to create the log file.', 'Activa la opción de arriba y pulsa Aplicar primero para crear el fichero de log.')?></span>
-<?endif;?>
 </blockquote>
 
 <h4><?=t('Security — TLS PSK', 'Seguridad — TLS PSK')?></h4>
@@ -154,3 +164,13 @@ $agentLogExists   = file_exists($agentLogFile);
 
 <input type="submit" name="#apply" value="<?=t('Apply', 'Aplicar')?>">
 </form>
+
+<script>
+function openZabbixSyslogTerminal() {
+  var name = 'zabbix_agent_syslog';
+  var w = makeWindow(name, Math.min(screen.availHeight,800), Math.min(screen.availWidth,1200));
+  $.get('/plugins/zabbix_agent/include/OpenSyslogTerminal.php', {}, function(){
+    setTimeout(function(){ w.location = '/logterminal/'+name+'/'; w.focus(); }, 200);
+  });
+}
+</script>
