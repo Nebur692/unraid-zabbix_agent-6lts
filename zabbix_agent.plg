@@ -6,10 +6,10 @@
 <!ENTITY plgauthor           "Nebur692">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.20.1">
+<!ENTITY version             "2026.07.20.2">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "ec04a5f79382e820f22d20ba6bb78580">
+<!ENTITY packageMD5          "6d7512b751eefc44f32fe49076f60e37">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -21,6 +21,16 @@ This is a fork of [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabian
 maintained here to keep the bundled agent on the Zabbix 6.0 LTS branch and fix a couple of
 long-standing bugs. All credit for the original plugin design goes to fabianonline.
 
+Este es un fork de [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabian/unraid-zabbix_agent),
+mantenido aquí para dejar el agente empaquetado en la rama Zabbix 6.0 LTS y arreglar un par de bugs de
+larga duración. Todo el crédito del diseño original del plugin es de fabianonline.
+
+### 2026.07.20.2
+- Documentation is now bilingual (English/Spanish): README files (repo root and plugin) and this
+  changelog entry are provided in both languages. No functional changes.
+- La documentación ahora es bilingüe (inglés/español): los README (raíz del repo y del plugin) y esta
+  entrada del changelog están en ambos idiomas. Sin cambios funcionales.
+
 ### 2026.07.20.1
 - Updated bundled zabbix_agentd from 5.2.1 (Nov 2020) to 6.0.47 LTS, using the official static
   Linux amd64 build from Zabbix.
@@ -30,6 +40,19 @@ long-standing bugs. All credit for the original plugin design goes to fabianonli
   across all matched CPU sensor labels (supports multi-socket boards), with the original "CPU Temp:"
   kept as a fallback. Mainboard temperature still reports null when no matching sensor label is found
   on the board.
+- Also updated zabbix_template.xml to the Zabbix 6.0 export schema (uuids, tags instead of
+  applications, host-qualified trigger expressions) — see release v1.0.1.
+
+- Actualizado el zabbix_agentd empaquetado de 5.2.1 (nov-2020) a 6.0.47 LTS, usando la build oficial
+  estática de Linux amd64 de Zabbix.
+- Arreglado unraid.temperatures (temperatures.sh): solo reconocía las etiquetas literales "CPU Temp:" /
+  "MB Temp:", así que en placas con el driver coretemp (Intel, etiquetado "Package id N:") o k10temp
+  (AMD, "Tctl:"/"Tdie:") siempre devolvía null para la temperatura de CPU. Ahora toma la lectura más
+  alta entre todas las etiquetas de CPU reconocidas (soporta placas multi-socket), manteniendo la
+  "CPU Temp:" original como último recurso. La temperatura de placa base sigue devolviendo null cuando
+  no hay ninguna etiqueta de sensor coincidente en la placa.
+- También se actualizó zabbix_template.xml al esquema de exportación de Zabbix 6.0 (uuids, tags en vez
+  de applications, expresiones de trigger con host explícito) — ver release v1.0.1.
 
 ### 2024.12.19.1
 - Sometimes, diskload.ini is not available (at least in Unraid 6.12.6). In that case we now skip omitting disk load data
