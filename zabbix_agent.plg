@@ -2,7 +2,7 @@
 
 <!DOCTYPE PLUGIN [
 <!ENTITY name                "zabbix_agent">
-<!ENTITY author              "Nebur692 (fork of fabianonline)">
+<!ENTITY author              "Nebur692">
 <!ENTITY plgauthor           "Nebur692">
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
