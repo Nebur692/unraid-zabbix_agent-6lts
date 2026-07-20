@@ -6,10 +6,10 @@
 <!ENTITY plgauthor           "Nebur692">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.20.4">
+<!ENTITY version             "2026.07.20.5">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "ece6c28782399c93e750729aa71ba7f2">
+<!ENTITY packageMD5          "4b6ea4dcde66fb3ccf696ec6aa7fc5fe">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -24,6 +24,18 @@ long-standing bugs. All credit for the original plugin design goes to fabianonli
 Este es un fork de [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabian/unraid-zabbix_agent),
 mantenido aquí para dejar el agente empaquetado en la rama Zabbix 6.0 LTS y arreglar un par de bugs de
 larga duración. Todo el crédito del diseño original del plugin es de fabianonline.
+
+### 2026.07.20.5
+- Added a live log viewer to the Settings page: a new "Log to a dedicated file" checkbox (off by
+  default, so saving other fields doesn't change where logs go) sets LogType=file/LogFile, and once
+  enabled and applied, a "View live logs" link opens Unraid's native live terminal (the same mechanism
+  used by Docker, VMs and NUT) tailing the agent's log in real time.
+
+- Añadido un visor de logs en vivo a la página de Settings: una nueva casilla "Log a un fichero propio"
+  (desactivada por defecto, para que guardar otros campos no cambie dónde van los logs) pone
+  LogType=file/LogFile, y una vez activada y aplicada, un enlace "Ver logs en vivo" abre el terminal en
+  vivo nativo de Unraid (el mismo mecanismo que usan Docker, VMs y NUT) siguiendo el log del agente en
+  tiempo real.
 
 ### 2026.07.20.4
 - The Settings page now shows a single language instead of both stacked: it reads Unraid's webGUI

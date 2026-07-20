@@ -29,6 +29,8 @@ authorship over the base plugin.
   by this page** — manual edits to it will be overwritten on the next Apply. The page shows English or
   Spanish automatically based on Unraid's webGUI language (any `es_*` locale shows Spanish, everything else
   falls back to English).
+- Added a live log viewer: an opt-in "Log to a dedicated file" checkbox, and once enabled, a "View live
+  logs" link that opens Unraid's native live terminal (same mechanism as Docker/VMs/NUT) on the agent's log.
 
 ### Compatibility
 
@@ -83,6 +85,9 @@ reclamar autoría del plugin base.
   `zabbix_agentd.custom.conf` pasa a generarse desde esta página** — las ediciones manuales se
   sobrescribirán en el siguiente Aplicar. La página muestra inglés o español automáticamente según el
   idioma del webGUI de Unraid (cualquier locale `es_*` muestra español, el resto cae a inglés).
+- Añadido un visor de logs en vivo: una casilla opcional "Log a un fichero propio", y una vez activada, un
+  enlace "Ver logs en vivo" que abre el terminal en vivo nativo de Unraid (mismo mecanismo que Docker/VMs/NUT)
+  sobre el log del agente.
 
 ### Compatibilidad
 

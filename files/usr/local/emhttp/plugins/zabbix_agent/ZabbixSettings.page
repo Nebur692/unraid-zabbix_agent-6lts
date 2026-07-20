@@ -8,6 +8,7 @@ $sName = "zabbix_agent";
 $settingsFile = "/boot/config/plugins/$sName/zabbix_agent_settings.cfg";
 $customConf   = "/boot/config/plugins/$sName/zabbix_agentd.custom.conf";
 $pskFile      = "/boot/config/plugins/$sName/zabbix_unraid.psk";
+$agentLogFile = "/var/log/zabbix_agentd.log";
 
 // Show Spanish when Unraid's webGUI language is set to any Spanish variant
 // (dynamix.cfg's locale=, e.g. "es_ES"), English otherwise. No separate
@@ -33,6 +34,7 @@ if (file_exists($settingsFile)) {
         $cfg['DISABLE_LISTENING'] = (($cfg['StartAgents'] ?? '') === '0') ? '1' : '';
         $cfg['TLS_ENABLE']        = (($cfg['TLSConnect'] ?? '') === 'psk') ? '1' : '';
         $cfg['TLS_PSK_IDENTITY']  = $cfg['TLSPSKIdentity']    ?? '';
+        $cfg['LOG_TO_FILE']       = (($cfg['LogType'] ?? '') === 'file') ? '1' : '';
 } else {
         $cfg = [];
 }
@@ -49,6 +51,8 @@ $disableListening = ($cfg['DISABLE_LISTENING'] ?? '') === '1';
 $tlsEnable        = ($cfg['TLS_ENABLE'] ?? '') === '1';
 $tlsPskIdentity   = zbx_val($cfg, 'TLS_PSK_IDENTITY');
 $pskFileExists    = file_exists($pskFile);
+$logToFile        = ($cfg['LOG_TO_FILE'] ?? '') === '1';
+$agentLogExists   = file_exists($agentLogFile);
 ?>
 <form markdown="0" method="POST" action="/update.php" target="progressFrame">
 <input type="hidden" name="#file" value="<?=$sName?>/zabbix_agent_settings.cfg">
@@ -112,6 +116,23 @@ $pskFileExists    = file_exists($pskFile);
 'Sets StartAgents=0, fully turning off the agent\'s listening port (10050). Only enable this if you rely exclusively on active checks.',
 'Pone StartAgents=0, desactivando por completo el puerto de escucha del agente (10050). Actívalo solo si usas exclusivamente active checks.'
 )?>
+</blockquote>
+
+<dl>
+<dt><?=t('Log to a dedicated file:', 'Log a un fichero propio:')?></dt>
+<dd><input type="checkbox" name="LOG_TO_FILE" value="1" <?=$logToFile ? 'checked' : ''?>></dd>
+</dl>
+<blockquote class="inline_help">
+<?=t(
+'Sets LogType=file / LogFile='.$agentLogFile.' instead of the default syslog. Required for the live log viewer below. Off by default so simply saving other fields doesn\'t change where logs go.',
+'Pone LogType=file / LogFile='.$agentLogFile.' en vez del syslog por defecto. Necesario para el visor de logs en vivo de abajo. Desactivado por defecto para que guardar otros campos no cambie dónde van los logs.'
+)?>
+<br>
+<?if ($agentLogExists):?>
+<a onclick="openTerminal('log','zabbix_agent','zabbix_agentd.log')" style="cursor:pointer;"><i class="fa fa-book"></i> <u><?=t('View live logs', 'Ver logs en vivo')?></u></a>
+<?else:?>
+<span class="dim-text"><?=t('Enable the option above and click Apply first to create the log file.', 'Activa la opción de arriba y pulsa Aplicar primero para crear el fichero de log.')?></span>
+<?endif;?>
 </blockquote>
 
 <h4><?=t('Security — TLS PSK', 'Seguridad — TLS PSK')?></h4>
