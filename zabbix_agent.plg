@@ -26,6 +26,32 @@ Este es un fork de [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabia
 mantenido aquí para dejar el agente empaquetado en la rama Zabbix 6.0 LTS y arreglar un par de bugs de
 larga duración. Todo el crédito del diseño original del plugin es de fabianonline.
 
+### Template fix (2026.07.20, no package version bump — see below)
+- Fixed the "Temperature Mainboard" item (`unraid.temperatures[mainboard]`) in zabbix_template.xml:
+  on hardware without a board sensor, the agent correctly reports `null`, but the item had no way to
+  handle that gracefully, so Zabbix marked it "not supported" instead of just recording no data. The
+  final working fix adds a "Does not match regular expression" preprocessing step (pattern
+  `^-?[0-9]+(\.[0-9]+)?$`) with "Discard value" error handling, after the existing JSONPath step.
+  Verified stable (state=normal, no error) for several minutes across multiple real polling cycles on
+  a live Zabbix 6.0.42 server. Note for anyone hitting a similar issue: adding error handling directly
+  to the JSONPath step does *not* work here, because the failure happens at Zabbix's final "convert to
+  item value type" stage, which isn't covered by that step's own error handler — it needs a dedicated
+  validation step afterward. Like the 2026.07.20.1 template fix, this only touches zabbix_template.xml,
+  not the installable package, so no version bump was needed.
+
+- Arreglado el item "Temperature Mainboard" (`unraid.temperatures[mainboard]`) en zabbix_template.xml:
+  en hardware sin sensor de placa, el agente devuelve correctamente `null`, pero el item no tenía forma
+  de manejarlo con elegancia, así que Zabbix lo marcaba como "no soportado" en vez de simplemente no
+  tener dato. El fix final que funciona añade un paso de preprocesado "Does not match regular
+  expression" (patrón `^-?[0-9]+(\.[0-9]+)?$`) con gestión de error "Discard value", después del paso
+  JSONPath ya existente. Verificado estable (estado normal, sin error) durante varios minutos en
+  múltiples ciclos reales de sondeo, en un Zabbix Server 6.0.42 real. Nota para quien tope con algo
+  parecido: añadir la gestión de error directamente al paso JSONPath *no* funciona en este caso, porque
+  el fallo ocurre en la etapa final de Zabbix de "convertir al tipo de valor del item", que no queda
+  cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
+  Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
+  instalable, así que no hizo falta subir de versión.
+
 ### 2026.07.20.6
 - The plugin now links directly to its Settings page from the Plugins tab (added `launch=`).
 - Added a live syslog log viewer that works immediately, with no setup: a "View live logs (from
