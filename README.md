@@ -23,6 +23,10 @@ authorship over the base plugin.
   all matched CPU sensor labels (multi-socket boards included), keeping `"CPU Temp:"` as a fallback.
 - Updated `zabbix_template.xml` to the Zabbix 6.0 export schema (uuids, `tags` instead of `applications`,
   host-qualified trigger expressions) — the old file was still in the 5.0 export schema.
+- Added a webGUI Settings page (Unraid → Settings → Utilities → Zabbix Agent) for the most commonly changed
+  options: `Server` (allowed hosts for passive checks), `ServerActive`, `Hostname`, `Timeout`, disabling
+  passive checks entirely, and enabling TLS PSK. **Once saved, `zabbix_agentd.custom.conf` becomes generated
+  by this page** — manual edits to it will be overwritten on the next Apply.
 
 ### Installing
 
@@ -63,6 +67,11 @@ reclamar autoría del plugin base.
   recurso.
 - Actualizado `zabbix_template.xml` al esquema de exportación de Zabbix 6.0 (uuids, `tags` en vez de
   `applications`, expresiones de trigger con host explícito) — el fichero anterior seguía en el esquema 5.0.
+- Añadida una página de Settings en el webGUI (Unraid → Settings → Utilities → Zabbix Agent) con las
+  opciones más comunes: `Server` (hosts permitidos para passive checks), `ServerActive`, `Hostname`,
+  `Timeout`, desactivar del todo los passive checks, y activar TLS PSK. **Al guardarla una vez,
+  `zabbix_agentd.custom.conf` pasa a generarse desde esta página** — las ediciones manuales se
+  sobrescribirán en el siguiente Aplicar.
 
 ### Instalación
 

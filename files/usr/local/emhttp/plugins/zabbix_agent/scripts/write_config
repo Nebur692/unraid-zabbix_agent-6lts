@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Regenerates zabbix_agentd.custom.conf from the Settings page's
+# zabbix_agent_settings.cfg (written by Unraid's /update.php, which quotes
+# every value) and restarts zabbix_agentd. Zabbix's own config format is
+# unquoted (Key=value), so this script is the translation step between the
+# two — see ZabbixSettings.page for the form that produces the .cfg.
+
+SETTINGS="/boot/config/plugins/zabbix_agent/zabbix_agent_settings.cfg"
+CUSTOM_CONF="/boot/config/plugins/zabbix_agent/zabbix_agentd.custom.conf"
+PSK_FILE="/boot/config/plugins/zabbix_agent/zabbix_unraid.psk"
+
+echo "Writing zabbix_agent configuration..."
+
+# Defaults if the settings file doesn't exist yet or a field was left blank.
+SERVER=""
+SERVERACTIVE=""
+HOSTNAME=""
+TIMEOUT="30"
+TLS_ENABLE=""
+TLS_PSK_IDENTITY=""
+DISABLE_LISTENING=""
+
+[ -f "$SETTINGS" ] && source "$SETTINGS"
+
+{
+        [ -n "$SERVER" ] && echo "Server=$SERVER"
+        [ -n "$SERVERACTIVE" ] && echo "ServerActive=$SERVERACTIVE"
+        [ -n "$HOSTNAME" ] && echo "Hostname=$HOSTNAME"
+        [ -n "$TIMEOUT" ] && echo "Timeout=$TIMEOUT"
+
+        if [ "$DISABLE_LISTENING" = "1" ]; then
+                echo "StartAgents=0"
+        fi
+
+        if [ "$TLS_ENABLE" = "1" ] && [ -n "$TLS_PSK_IDENTITY" ] && [ -f "$PSK_FILE" ]; then
+                echo "TLSConnect=psk"
+                echo "TLSAccept=psk"
+                echo "TLSPSKIdentity=$TLS_PSK_IDENTITY"
+                echo "TLSPSKFile=$PSK_FILE"
+        fi
+} > "$CUSTOM_CONF"
+
+logger -t "zabbix_agent" "Settings page: regenerated zabbix_agentd.custom.conf"
+
+if [ -x /etc/rc.d/rc.zabbix_agentd ]; then
+        /etc/rc.d/rc.zabbix_agentd restart | logger -t "zabbix_agent"
+fi

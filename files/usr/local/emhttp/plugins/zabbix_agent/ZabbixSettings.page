@@ -1,0 +1,128 @@
+Menu="Utilities"
+Title="Zabbix Agent"
+Icon="zabbix_agent.png"
+Markdown="false"
+---
+<?
+$sName = "zabbix_agent";
+$settingsFile = "/boot/config/plugins/$sName/zabbix_agent_settings.cfg";
+$customConf   = "/boot/config/plugins/$sName/zabbix_agentd.custom.conf";
+$pskFile      = "/boot/config/plugins/$sName/zabbix_unraid.psk";
+
+if (file_exists($settingsFile)) {
+        $cfg = @parse_ini_file($settingsFile) ?: [];
+} elseif (file_exists($customConf)) {
+        // First time the Settings page is opened: best-effort read of the
+        // hand-edited custom.conf so an already-configured install (like
+        // this one) doesn't show a blank form.
+        $cfg = @parse_ini_file($customConf) ?: [];
+        $cfg['SERVER']            = $cfg['Server']            ?? '';
+        $cfg['SERVERACTIVE']      = $cfg['ServerActive']      ?? '';
+        $cfg['HOSTNAME']          = $cfg['Hostname']          ?? '';
+        $cfg['TIMEOUT']           = $cfg['Timeout']           ?? '30';
+        $cfg['DISABLE_LISTENING'] = (($cfg['StartAgents'] ?? '') === '0') ? '1' : '';
+        $cfg['TLS_ENABLE']        = (($cfg['TLSConnect'] ?? '') === 'psk') ? '1' : '';
+        $cfg['TLS_PSK_IDENTITY']  = $cfg['TLSPSKIdentity']    ?? '';
+} else {
+        $cfg = [];
+}
+
+function zbx_val($cfg, $key, $default = '') {
+        return htmlspecialchars(trim($cfg[$key] ?? $default), ENT_QUOTES);
+}
+
+$server           = zbx_val($cfg, 'SERVER');
+$serverActive     = zbx_val($cfg, 'SERVERACTIVE');
+$hostname         = zbx_val($cfg, 'HOSTNAME');
+$timeout          = zbx_val($cfg, 'TIMEOUT', '30');
+$disableListening = ($cfg['DISABLE_LISTENING'] ?? '') === '1';
+$tlsEnable        = ($cfg['TLS_ENABLE'] ?? '') === '1';
+$tlsPskIdentity   = zbx_val($cfg, 'TLS_PSK_IDENTITY');
+$pskFileExists    = file_exists($pskFile);
+?>
+<form markdown="0" method="POST" action="/update.php" target="progressFrame">
+<input type="hidden" name="#file" value="<?=$sName?>/zabbix_agent_settings.cfg">
+<input type="hidden" name="#command" value="/usr/local/emhttp/plugins/<?=$sName?>/scripts/write_config">
+
+<div class="red-text" style="border:1px solid red;padding:5px;margin-bottom:10px;">
+EN: Saving this form regenerates <code>zabbix_agentd.custom.conf</code> from these fields — any manual edits
+you made to that file directly will be overwritten the next time you click Apply.<br>
+ES: Al guardar este formulario se regenera <code>zabbix_agentd.custom.conf</code> a partir de estos campos —
+cualquier edición manual que hayas hecho directamente en ese fichero se sobrescribirá la próxima vez que
+pulses Aplicar.
+</div>
+
+<h4>Connection / Conexión</h4>
+
+<dl>
+<dt>Server (allowed hosts for passive checks):</dt>
+<dd><input type="text" name="SERVER" class="narrow" value="<?=$server?>" placeholder="e.g. 192.168.1.10 (leave empty for the plugin default, 0.0.0.0/0)"></dd>
+</dl>
+<blockquote class="inline_help">
+EN: Comma-separated list of IPs allowed to poll this agent (passive checks). Leave empty to keep the plugin's
+default (0.0.0.0/0, i.e. anyone) — restricting this to your Zabbix Server/Proxy IP is recommended.<br>
+ES: Lista separada por comas de IPs autorizadas a consultar este agente (passive checks). Déjalo en blanco
+para mantener el valor por defecto del plugin (0.0.0.0/0, es decir, cualquiera) — se recomienda restringirlo
+a la IP de tu Zabbix Server/Proxy.
+</blockquote>
+
+<dl>
+<dt>ServerActive (Zabbix Server/Proxy for active checks):</dt>
+<dd><input type="text" name="SERVERACTIVE" class="narrow" value="<?=$serverActive?>" placeholder="e.g. 192.168.1.10:10051"></dd>
+</dl>
+<blockquote class="inline_help">
+EN: Address of the Zabbix Server or Proxy this agent should push active check data to.<br>
+ES: Dirección del Zabbix Server o Proxy al que este agente debe enviar los datos de active checks.
+</blockquote>
+
+<dl>
+<dt>Hostname:</dt>
+<dd><input type="text" name="HOSTNAME" class="narrow" value="<?=$hostname?>" placeholder="must match the host name configured on the Zabbix Server"></dd>
+</dl>
+<blockquote class="inline_help">
+EN: Must exactly match the host name configured for this server on the Zabbix Server/Proxy.<br>
+ES: Debe coincidir exactamente con el nombre de host configurado para este servidor en el Zabbix Server/Proxy.
+</blockquote>
+
+<dl>
+<dt>Timeout (seconds):</dt>
+<dd><input type="text" name="TIMEOUT" class="narrow" value="<?=$timeout?>"></dd>
+</dl>
+
+<h4>Advanced / Avanzado</h4>
+
+<dl>
+<dt>Disable passive checks entirely:</dt>
+<dd><input type="checkbox" name="DISABLE_LISTENING" value="1" <?=$disableListening ? 'checked' : ''?>></dd>
+</dl>
+<blockquote class="inline_help">
+EN: Sets StartAgents=0, fully turning off the agent's listening port (10050). Only enable this if you rely
+exclusively on active checks.<br>
+ES: Pone StartAgents=0, desactivando por completo el puerto de escucha del agente (10050). Actívalo solo si
+usas exclusivamente active checks.
+</blockquote>
+
+<h4>Security — TLS PSK / Seguridad — TLS PSK</h4>
+
+<dl>
+<dt>Enable TLS (PSK):</dt>
+<dd><input type="checkbox" name="TLS_ENABLE" value="1" <?=$tlsEnable ? 'checked' : ''?>></dd>
+</dl>
+<dl>
+<dt>PSK identity:</dt>
+<dd><input type="text" name="TLS_PSK_IDENTITY" class="narrow" value="<?=$tlsPskIdentity?>" placeholder="e.g. PSK 001"></dd>
+</dl>
+<blockquote class="inline_help">
+EN: Requires a pre-shared key file already present at <code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code>
+(this plugin does not generate one for you) — currently <?=$pskFileExists ? 'found' : '<b>not found</b>'?>.
+The identity here must match what's configured for this host on the Zabbix Server/Proxy. If the key file is
+missing, TLS will not be enabled even if this box is checked.<br>
+ES: Requiere que ya exista un fichero de clave precompartida en
+<code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code> (este plugin no lo genera por ti) —
+actualmente <?=$pskFileExists ? 'encontrado' : '<b>no encontrado</b>'?>. La identidad debe coincidir con la
+configurada para este host en el Zabbix Server/Proxy. Si falta el fichero de clave, el TLS no se activará
+aunque esta casilla esté marcada.
+</blockquote>
+
+<input type="submit" name="#apply" value="Apply">
+</form>
