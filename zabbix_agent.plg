@@ -6,10 +6,10 @@
 <!ENTITY plgauthor           "Nebur692">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.20.3">
+<!ENTITY version             "2026.07.20.4">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "27ebeeb086b38d6b95bb3b42403d3626">
+<!ENTITY packageMD5          "ece6c28782399c93e750729aa71ba7f2">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -24,6 +24,14 @@ long-standing bugs. All credit for the original plugin design goes to fabianonli
 Este es un fork de [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabian/unraid-zabbix_agent),
 mantenido aquí para dejar el agente empaquetado en la rama Zabbix 6.0 LTS y arreglar un par de bugs de
 larga duración. Todo el crédito del diseño original del plugin es de fabianonline.
+
+### 2026.07.20.4
+- The Settings page now shows a single language instead of both stacked: it reads Unraid's webGUI
+  language (dynamix.cfg's locale=) and displays Spanish for any es_* locale, English otherwise.
+
+- La página de Settings ahora muestra un solo idioma en vez de los dos apilados: lee el idioma del
+  webGUI de Unraid (locale= de dynamix.cfg) y muestra español para cualquier locale es_*, inglés en
+  el resto de casos.
 
 ### 2026.07.20.3
 - Added a webGUI Settings page (Utilities > Zabbix Agent): Server (allowed hosts for passive checks),

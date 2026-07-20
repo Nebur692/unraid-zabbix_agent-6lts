@@ -26,7 +26,17 @@ authorship over the base plugin.
 - Added a webGUI Settings page (Unraid → Settings → Utilities → Zabbix Agent) for the most commonly changed
   options: `Server` (allowed hosts for passive checks), `ServerActive`, `Hostname`, `Timeout`, disabling
   passive checks entirely, and enabling TLS PSK. **Once saved, `zabbix_agentd.custom.conf` becomes generated
-  by this page** — manual edits to it will be overwritten on the next Apply.
+  by this page** — manual edits to it will be overwritten on the next Apply. The page shows English or
+  Spanish automatically based on Unraid's webGUI language (any `es_*` locale shows Spanish, everything else
+  falls back to English).
+
+### Compatibility
+
+Developed and tested on **Unraid 7.3.2**. The plugin only relies on long-standing Dynamix webGUI mechanisms
+(`.page` files, `/update.php`, `dynamix.cfg`) that have been present throughout the Unraid 6.x and 7.x line,
+so it should work on any reasonably recent 6.x/7.x install — it just hasn't been verified below 7.3.2 by this
+fork's maintainer. The pre-fork upstream project is known to have run on at least Unraid 6.12.6. If you try
+it on an older or newer release, please open an issue with the result.
 
 ### Installing
 
@@ -71,7 +81,17 @@ reclamar autoría del plugin base.
   opciones más comunes: `Server` (hosts permitidos para passive checks), `ServerActive`, `Hostname`,
   `Timeout`, desactivar del todo los passive checks, y activar TLS PSK. **Al guardarla una vez,
   `zabbix_agentd.custom.conf` pasa a generarse desde esta página** — las ediciones manuales se
-  sobrescribirán en el siguiente Aplicar.
+  sobrescribirán en el siguiente Aplicar. La página muestra inglés o español automáticamente según el
+  idioma del webGUI de Unraid (cualquier locale `es_*` muestra español, el resto cae a inglés).
+
+### Compatibilidad
+
+Desarrollado y probado en **Unraid 7.3.2**. El plugin solo depende de mecanismos del webGUI Dynamix que
+llevan presentes desde hace mucho en toda la línea 6.x y 7.x de Unraid (ficheros `.page`, `/update.php`,
+`dynamix.cfg`), así que debería funcionar en cualquier instalación 6.x/7.x razonablemente reciente — solo
+que no se ha verificado por debajo de 7.3.2 por parte del mantenedor de este fork. El proyecto original
+(antes del fork) se sabe que funcionaba al menos en Unraid 6.12.6. Si lo pruebas en una versión más antigua
+o más nueva, abre un issue contando el resultado.
 
 ### Instalación
 

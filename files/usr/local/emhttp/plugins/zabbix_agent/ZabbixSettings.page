@@ -9,6 +9,16 @@ $settingsFile = "/boot/config/plugins/$sName/zabbix_agent_settings.cfg";
 $customConf   = "/boot/config/plugins/$sName/zabbix_agentd.custom.conf";
 $pskFile      = "/boot/config/plugins/$sName/zabbix_unraid.psk";
 
+// Show Spanish when Unraid's webGUI language is set to any Spanish variant
+// (dynamix.cfg's locale=, e.g. "es_ES"), English otherwise. No separate
+// language files — just picks between the two strings passed to t().
+$dynamixCfg = @parse_ini_file('/boot/config/plugins/dynamix/dynamix.cfg') ?: [];
+$isSpanish = stripos($dynamixCfg['locale'] ?? 'en_US', 'es_') === 0;
+function t($en, $es) {
+        global $isSpanish;
+        return $isSpanish ? $es : $en;
+}
+
 if (file_exists($settingsFile)) {
         $cfg = @parse_ini_file($settingsFile) ?: [];
 } elseif (file_exists($customConf)) {
@@ -45,84 +55,81 @@ $pskFileExists    = file_exists($pskFile);
 <input type="hidden" name="#command" value="/usr/local/emhttp/plugins/<?=$sName?>/scripts/write_config">
 
 <div class="red-text" style="border:1px solid red;padding:5px;margin-bottom:10px;">
-EN: Saving this form regenerates <code>zabbix_agentd.custom.conf</code> from these fields — any manual edits
-you made to that file directly will be overwritten the next time you click Apply.<br>
-ES: Al guardar este formulario se regenera <code>zabbix_agentd.custom.conf</code> a partir de estos campos —
-cualquier edición manual que hayas hecho directamente en ese fichero se sobrescribirá la próxima vez que
-pulses Aplicar.
+<?=t(
+'Saving this form regenerates <code>zabbix_agentd.custom.conf</code> from these fields — any manual edits you made to that file directly will be overwritten the next time you click Apply.',
+'Al guardar este formulario se regenera <code>zabbix_agentd.custom.conf</code> a partir de estos campos — cualquier edición manual que hayas hecho directamente en ese fichero se sobrescribirá la próxima vez que pulses Aplicar.'
+)?>
 </div>
 
-<h4>Connection / Conexión</h4>
+<h4><?=t('Connection', 'Conexión')?></h4>
 
 <dl>
-<dt>Server (allowed hosts for passive checks):</dt>
-<dd><input type="text" name="SERVER" class="narrow" value="<?=$server?>" placeholder="e.g. 192.168.1.10 (leave empty for the plugin default, 0.0.0.0/0)"></dd>
+<dt><?=t('Server (allowed hosts for passive checks):', 'Server (hosts permitidos para passive checks):')?></dt>
+<dd><input type="text" name="SERVER" class="narrow" value="<?=$server?>" placeholder="<?=t('e.g. 192.168.1.10 (leave empty for the plugin default, 0.0.0.0/0)', 'ej. 192.168.1.10 (déjalo vacío para el valor por defecto, 0.0.0.0/0)')?>"></dd>
 </dl>
 <blockquote class="inline_help">
-EN: Comma-separated list of IPs allowed to poll this agent (passive checks). Leave empty to keep the plugin's
-default (0.0.0.0/0, i.e. anyone) — restricting this to your Zabbix Server/Proxy IP is recommended.<br>
-ES: Lista separada por comas de IPs autorizadas a consultar este agente (passive checks). Déjalo en blanco
-para mantener el valor por defecto del plugin (0.0.0.0/0, es decir, cualquiera) — se recomienda restringirlo
-a la IP de tu Zabbix Server/Proxy.
+<?=t(
+'Comma-separated list of IPs allowed to poll this agent (passive checks). Leave empty to keep the plugin\'s default (0.0.0.0/0, i.e. anyone) — restricting this to your Zabbix Server/Proxy IP is recommended.',
+'Lista separada por comas de IPs autorizadas a consultar este agente (passive checks). Déjalo en blanco para mantener el valor por defecto del plugin (0.0.0.0/0, es decir, cualquiera) — se recomienda restringirlo a la IP de tu Zabbix Server/Proxy.'
+)?>
 </blockquote>
 
 <dl>
-<dt>ServerActive (Zabbix Server/Proxy for active checks):</dt>
+<dt><?=t('ServerActive (Zabbix Server/Proxy for active checks):', 'ServerActive (Zabbix Server/Proxy para active checks):')?></dt>
 <dd><input type="text" name="SERVERACTIVE" class="narrow" value="<?=$serverActive?>" placeholder="e.g. 192.168.1.10:10051"></dd>
 </dl>
 <blockquote class="inline_help">
-EN: Address of the Zabbix Server or Proxy this agent should push active check data to.<br>
-ES: Dirección del Zabbix Server o Proxy al que este agente debe enviar los datos de active checks.
+<?=t(
+'Address of the Zabbix Server or Proxy this agent should push active check data to.',
+'Dirección del Zabbix Server o Proxy al que este agente debe enviar los datos de active checks.'
+)?>
 </blockquote>
 
 <dl>
-<dt>Hostname:</dt>
-<dd><input type="text" name="HOSTNAME" class="narrow" value="<?=$hostname?>" placeholder="must match the host name configured on the Zabbix Server"></dd>
+<dt><?=t('Hostname:', 'Hostname:')?></dt>
+<dd><input type="text" name="HOSTNAME" class="narrow" value="<?=$hostname?>" placeholder="<?=t('must match the host name configured on the Zabbix Server', 'debe coincidir con el nombre configurado en el Zabbix Server')?>"></dd>
 </dl>
 <blockquote class="inline_help">
-EN: Must exactly match the host name configured for this server on the Zabbix Server/Proxy.<br>
-ES: Debe coincidir exactamente con el nombre de host configurado para este servidor en el Zabbix Server/Proxy.
+<?=t(
+'Must exactly match the host name configured for this server on the Zabbix Server/Proxy.',
+'Debe coincidir exactamente con el nombre de host configurado para este servidor en el Zabbix Server/Proxy.'
+)?>
 </blockquote>
 
 <dl>
-<dt>Timeout (seconds):</dt>
+<dt><?=t('Timeout (seconds):', 'Timeout (segundos):')?></dt>
 <dd><input type="text" name="TIMEOUT" class="narrow" value="<?=$timeout?>"></dd>
 </dl>
 
-<h4>Advanced / Avanzado</h4>
+<h4><?=t('Advanced', 'Avanzado')?></h4>
 
 <dl>
-<dt>Disable passive checks entirely:</dt>
+<dt><?=t('Disable passive checks entirely:', 'Desactivar los passive checks del todo:')?></dt>
 <dd><input type="checkbox" name="DISABLE_LISTENING" value="1" <?=$disableListening ? 'checked' : ''?>></dd>
 </dl>
 <blockquote class="inline_help">
-EN: Sets StartAgents=0, fully turning off the agent's listening port (10050). Only enable this if you rely
-exclusively on active checks.<br>
-ES: Pone StartAgents=0, desactivando por completo el puerto de escucha del agente (10050). Actívalo solo si
-usas exclusivamente active checks.
+<?=t(
+'Sets StartAgents=0, fully turning off the agent\'s listening port (10050). Only enable this if you rely exclusively on active checks.',
+'Pone StartAgents=0, desactivando por completo el puerto de escucha del agente (10050). Actívalo solo si usas exclusivamente active checks.'
+)?>
 </blockquote>
 
-<h4>Security — TLS PSK / Seguridad — TLS PSK</h4>
+<h4><?=t('Security — TLS PSK', 'Seguridad — TLS PSK')?></h4>
 
 <dl>
-<dt>Enable TLS (PSK):</dt>
+<dt><?=t('Enable TLS (PSK):', 'Activar TLS (PSK):')?></dt>
 <dd><input type="checkbox" name="TLS_ENABLE" value="1" <?=$tlsEnable ? 'checked' : ''?>></dd>
 </dl>
 <dl>
-<dt>PSK identity:</dt>
+<dt><?=t('PSK identity:', 'Identidad PSK:')?></dt>
 <dd><input type="text" name="TLS_PSK_IDENTITY" class="narrow" value="<?=$tlsPskIdentity?>" placeholder="e.g. PSK 001"></dd>
 </dl>
 <blockquote class="inline_help">
-EN: Requires a pre-shared key file already present at <code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code>
-(this plugin does not generate one for you) — currently <?=$pskFileExists ? 'found' : '<b>not found</b>'?>.
-The identity here must match what's configured for this host on the Zabbix Server/Proxy. If the key file is
-missing, TLS will not be enabled even if this box is checked.<br>
-ES: Requiere que ya exista un fichero de clave precompartida en
-<code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code> (este plugin no lo genera por ti) —
-actualmente <?=$pskFileExists ? 'encontrado' : '<b>no encontrado</b>'?>. La identidad debe coincidir con la
-configurada para este host en el Zabbix Server/Proxy. Si falta el fichero de clave, el TLS no se activará
-aunque esta casilla esté marcada.
+<?=t(
+'Requires a pre-shared key file already present at <code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code> (this plugin does not generate one for you) — currently '.($pskFileExists ? 'found' : '<b>not found</b>').'. The identity here must match what\'s configured for this host on the Zabbix Server/Proxy. If the key file is missing, TLS will not be enabled even if this box is checked.',
+'Requiere que ya exista un fichero de clave precompartida en <code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code> (este plugin no lo genera por ti) — actualmente '.($pskFileExists ? 'encontrado' : '<b>no encontrado</b>').'. La identidad debe coincidir con la configurada para este host en el Zabbix Server/Proxy. Si falta el fichero de clave, el TLS no se activará aunque esta casilla esté marcada.'
+)?>
 </blockquote>
 
-<input type="submit" name="#apply" value="Apply">
+<input type="submit" name="#apply" value="<?=t('Apply', 'Aplicar')?>">
 </form>
