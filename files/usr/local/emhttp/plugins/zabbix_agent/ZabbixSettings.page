@@ -54,6 +54,28 @@ $pskFileExists    = file_exists($pskFile);
 $logToFile        = ($cfg['LOG_TO_FILE'] ?? '') === '1';
 $agentLogExists   = file_exists($agentLogFile);
 ?>
+<style>
+.zbx-status {
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+  padding: 8px 14px;
+  margin-bottom: 15px;
+  font-size: 0.95em;
+}
+.zbx-status b { margin-right: 3px; }
+.zbx-status .sep { opacity: 0.4; margin: 0 8px; }
+.zbx-box {
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 5px 15px 12px 15px;
+  margin-bottom: 15px;
+}
+.zbx-box h4 {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+</style>
 <form markdown="0" method="POST" action="/update.php" target="progressFrame">
 <input type="hidden" name="#file" value="<?=$sName?>/zabbix_agent_settings.cfg">
 <input type="hidden" name="#command" value="/usr/local/emhttp/plugins/<?=$sName?>/scripts/write_config">
@@ -65,6 +87,18 @@ $agentLogExists   = file_exists($agentLogFile);
 )?>
 </div>
 
+<div class="zbx-status">
+<b><?=t('Current:', 'Estado actual:')?></b>
+Server: <code><?=$server !== '' ? $server : '0.0.0.0/0 ('.t('default','por defecto').')'?></code>
+<span class="sep">&middot;</span>
+ServerActive: <code><?=$serverActive !== '' ? $serverActive : t('(not set)','(sin definir)')?></code>
+<span class="sep">&middot;</span>
+TLS: <code><?=$tlsEnable ? t('on','activado') : t('off','desactivado')?></code>
+<span class="sep">&middot;</span>
+<?=t('Passive checks','Passive checks')?>: <code><?=$disableListening ? t('disabled','desactivados') : t('enabled','activados')?></code>
+</div>
+
+<div class="zbx-box">
 <h4><?=t('Connection', 'Conexión')?></h4>
 
 <dl>
@@ -104,7 +138,9 @@ $agentLogExists   = file_exists($agentLogFile);
 <dt><?=t('Timeout (seconds):', 'Timeout (segundos):')?></dt>
 <dd><input type="text" name="TIMEOUT" class="narrow" value="<?=$timeout?>"></dd>
 </dl>
+</div>
 
+<div class="zbx-box">
 <h4><?=t('Logs', 'Logs')?></h4>
 
 <blockquote class="inline_help">
@@ -131,7 +167,9 @@ $agentLogExists   = file_exists($agentLogFile);
 <span class="dim-text"><?=t('Enable the option above and click Apply first to create the log file.', 'Activa la opción de arriba y pulsa Aplicar primero para crear el fichero de log.')?></span>
 <?endif;?>
 </blockquote>
+</div>
 
+<div class="zbx-box">
 <h4><?=t('Advanced', 'Avanzado')?></h4>
 
 <dl>
@@ -144,7 +182,9 @@ $agentLogExists   = file_exists($agentLogFile);
 'Pone StartAgents=0, desactivando por completo el puerto de escucha del agente (10050). Actívalo solo si usas exclusivamente active checks.'
 )?>
 </blockquote>
+</div>
 
+<div class="zbx-box">
 <h4><?=t('Security — TLS PSK', 'Seguridad — TLS PSK')?></h4>
 
 <dl>
@@ -161,6 +201,7 @@ $agentLogExists   = file_exists($agentLogFile);
 'Requiere que ya exista un fichero de clave precompartida en <code>/boot/config/plugins/zabbix_agent/zabbix_unraid.psk</code> (este plugin no lo genera por ti) — actualmente '.($pskFileExists ? 'encontrado' : '<b>no encontrado</b>').'. La identidad debe coincidir con la configurada para este host en el Zabbix Server/Proxy. Si falta el fichero de clave, el TLS no se activará aunque esta casilla esté marcada.'
 )?>
 </blockquote>
+</div>
 
 <input type="submit" name="#apply" value="<?=t('Apply', 'Aplicar')?>">
 </form>
