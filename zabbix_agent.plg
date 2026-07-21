@@ -7,10 +7,10 @@
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.21.2">
+<!ENTITY version             "2026.07.21.3">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "92982089cd78b8cbb91c7b861cbc9e8c">
+<!ENTITY packageMD5          "7169da47428bbc38ede5673d5f796294">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -51,6 +51,34 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
   cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
   Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
   instalable, así que no hizo falta subir de versión.
+
+### 2026.07.21.3
+- Fixed: `scripts/ups.sh` (backing the `unraid.ups` item) called `apcaccess`, which only returns data
+  if the APCUPSD daemon is managing the UPS. Users running the (also Unraid-native) NUT stack instead —
+  the more common setup for non-APC UPS units — got a permanently empty `{"connected":true}` with no
+  real fields, and consequently no working triggers, no matter what was configured in Zabbix. Rewritten
+  to query NUT directly via `upsc ups@127.0.0.1` (the same instance name/address the bundled `nut-dw`
+  Unraid plugin uses by default), keeping the same JSON field names for compatibility (`status`,
+  `loadpct`, `bcharge`, `timeleft`, `battv`, `linev`), plus `connected:false` if NUT itself isn't
+  reachable.
+- Added actual `zabbix_template.xml` items/triggers for the UPS data (previously the UserParameter
+  existed but nothing in the template consumed it): dependent items for status, battery charge, load,
+  battery voltage and input voltage, plus triggers for "on battery" (OB), "low battery" (LB), "battery
+  needs replacement" (RB), and loss of communication with NUT.
+
+- Arreglado: `scripts/ups.sh` (detrás del item `unraid.ups`) llamaba a `apcaccess`, que solo devuelve
+  datos si el demonio APCUPSD es quien gestiona la UPS. Quien use en su lugar la pila NUT (también
+  nativa de Unraid, y más habitual para UPS no-APC) obtenía siempre `{"connected":true}` vacío, sin
+  ningún campo real, y por tanto sin triggers posibles configurara lo que configurase en Zabbix.
+  Reescrito para consultar NUT directamente vía `upsc ups@127.0.0.1` (el mismo nombre/dirección de
+  instancia que usa por defecto el plugin `nut-dw` de Unraid), manteniendo los mismos nombres de campo
+  JSON por compatibilidad (`status`, `loadpct`, `bcharge`, `timeleft`, `battv`, `linev`), más
+  `connected:false` si NUT no responde.
+- Añadidos items/triggers reales en `zabbix_template.xml` para los datos de la UPS (antes existía el
+  UserParameter pero nada en la plantilla lo consumía): items dependientes para estado, carga de
+  batería, carga de trabajo, voltaje de batería y voltaje de entrada, más triggers de "funcionando con
+  batería" (OB), "batería baja" (LB), "batería necesita reemplazo" (RB), y pérdida de comunicación con
+  NUT.
 
 ### 2026.07.21.2
 - Fixed: the "View live logs" links (both the zero-setup syslog one and the dedicated-file one) were

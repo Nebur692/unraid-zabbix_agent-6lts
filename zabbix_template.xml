@@ -354,6 +354,203 @@
             </tag>
           </tags>
         </item>
+        <item>
+          <uuid>b98d17e1d4404dfe8878ec8ad152dd09</uuid>
+          <name>UPS data</name>
+          <key>unraid.ups</key>
+          <delay>1m</delay>
+          <history>1d</history>
+          <trends>0</trends>
+          <value_type>TEXT</value_type>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
+        <item>
+          <uuid>ca128c847aac4d7cb6bc9bd9d0675529</uuid>
+          <name>UPS connected</name>
+          <type>DEPENDENT</type>
+          <key>unraid.ups[connected]</key>
+          <delay>0</delay>
+          <value_type>TEXT</value_type>
+          <preprocessing>
+            <step>
+              <type>JSONPATH</type>
+              <parameters>
+                <parameter>$.connected</parameter>
+              </parameters>
+            </step>
+          </preprocessing>
+          <master_item>
+            <key>unraid.ups</key>
+          </master_item>
+          <triggers>
+            <trigger>
+              <uuid>b670d03c9f474b65bca63aa884c2441d</uuid>
+              <expression>find(/Unraid server/unraid.ups[connected],,"like","false")=1</expression>
+              <name>UPS: sin comunicación con NUT</name>
+              <priority>HIGH</priority>
+            </trigger>
+          </triggers>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
+        <item>
+          <uuid>c9a1f70484ba4d01b2b5157883965eca</uuid>
+          <name>UPS status</name>
+          <type>DEPENDENT</type>
+          <key>unraid.ups[status]</key>
+          <delay>0</delay>
+          <value_type>TEXT</value_type>
+          <preprocessing>
+            <step>
+              <type>JSONPATH</type>
+              <parameters>
+                <parameter>$.status</parameter>
+              </parameters>
+            </step>
+          </preprocessing>
+          <master_item>
+            <key>unraid.ups</key>
+          </master_item>
+          <triggers>
+            <trigger>
+              <uuid>2d8c2ee6e3e3431da68a2962155bfd3b</uuid>
+              <expression>find(/Unraid server/unraid.ups[status],,"like","LB")=1</expression>
+              <name>UPS: batería baja (LB)</name>
+              <priority>DISASTER</priority>
+            </trigger>
+            <trigger>
+              <uuid>af28e0c84b014b73971e1846d05c610d</uuid>
+              <expression>find(/Unraid server/unraid.ups[status],,"like","OB")=1</expression>
+              <name>UPS: funcionando con batería (corte de luz)</name>
+              <priority>HIGH</priority>
+            </trigger>
+            <trigger>
+              <uuid>39bfd278ebfe41b9ac7ea6fc560e0817</uuid>
+              <expression>find(/Unraid server/unraid.ups[status],,"like","RB")=1</expression>
+              <name>UPS: batería necesita ser reemplazada (RB)</name>
+              <priority>WARNING</priority>
+            </trigger>
+          </triggers>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
+        <item>
+          <uuid>1a3bab4ed06f451fa52e589776b616f2</uuid>
+          <name>UPS battery charge</name>
+          <type>DEPENDENT</type>
+          <key>unraid.ups[bcharge]</key>
+          <delay>0</delay>
+          <value_type>FLOAT</value_type>
+          <units>%</units>
+          <preprocessing>
+            <step>
+              <type>JSONPATH</type>
+              <parameters>
+                <parameter>$.bcharge</parameter>
+              </parameters>
+            </step>
+          </preprocessing>
+          <master_item>
+            <key>unraid.ups</key>
+          </master_item>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
+        <item>
+          <uuid>793256f6c1c14725b5dc625758bfd3c6</uuid>
+          <name>UPS load</name>
+          <type>DEPENDENT</type>
+          <key>unraid.ups[loadpct]</key>
+          <delay>0</delay>
+          <value_type>FLOAT</value_type>
+          <units>%</units>
+          <preprocessing>
+            <step>
+              <type>JSONPATH</type>
+              <parameters>
+                <parameter>$.loadpct</parameter>
+              </parameters>
+            </step>
+          </preprocessing>
+          <master_item>
+            <key>unraid.ups</key>
+          </master_item>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
+        <item>
+          <uuid>b04e6e6f1c1a4b6d9d1f6d6d0b3e9f11</uuid>
+          <name>UPS battery voltage</name>
+          <type>DEPENDENT</type>
+          <key>unraid.ups[battv]</key>
+          <delay>0</delay>
+          <value_type>FLOAT</value_type>
+          <units>V</units>
+          <preprocessing>
+            <step>
+              <type>JSONPATH</type>
+              <parameters>
+                <parameter>$.battv</parameter>
+              </parameters>
+            </step>
+          </preprocessing>
+          <master_item>
+            <key>unraid.ups</key>
+          </master_item>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
+        <item>
+          <uuid>3f2b6f6a2c9c4a1a9b7f2b6f6a2c9c4a</uuid>
+          <name>UPS input voltage</name>
+          <type>DEPENDENT</type>
+          <key>unraid.ups[linev]</key>
+          <delay>0</delay>
+          <value_type>FLOAT</value_type>
+          <units>V</units>
+          <preprocessing>
+            <step>
+              <type>JSONPATH</type>
+              <parameters>
+                <parameter>$.linev</parameter>
+              </parameters>
+            </step>
+          </preprocessing>
+          <master_item>
+            <key>unraid.ups</key>
+          </master_item>
+          <tags>
+            <tag>
+              <tag>Application</tag>
+              <value>UPS</value>
+            </tag>
+          </tags>
+        </item>
       </items>
       <discovery_rules>
         <discovery_rule>
