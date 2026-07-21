@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Upstream project (fabianonline) / Proyecto original (fabianonline)"
+    url: https://git.schle.nz/fabian/unraid-zabbix_agent
+    about: >
+      Issues unrelated to the Zabbix 6.0 LTS / bug fixes in this fork belong upstream, not here.
+      Los issues que no tengan que ver con la rama Zabbix 6.0 LTS / los fixes de este fork van en el
+      proyecto original, no aquí.

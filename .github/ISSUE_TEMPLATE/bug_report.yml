@@ -1,0 +1,102 @@
+name: "🐞 Bug report / Reporte de fallo"
+description: "Report something broken in the plugin. / Reporta algo roto en el plugin."
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in as much as you can — logs and exact
+        steps make this much faster to fix.
+
+        Gracias por dedicar tiempo a reportar un fallo. Rellena lo que puedas — los logs y los pasos
+        exactos ayudan mucho a arreglarlo más rápido.
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: "Plugin version / Versión del plugin"
+      description: "Unraid → Plugins → Zabbix Agent. / Unraid → Plugins → Zabbix Agent."
+      placeholder: "e.g. 2026.07.21.3"
+    validations:
+      required: true
+
+  - type: input
+    id: unraid-version
+    attributes:
+      label: "Unraid version / Versión de Unraid"
+      placeholder: "e.g. 7.3.1"
+    validations:
+      required: true
+
+  - type: input
+    id: zabbix-server-version
+    attributes:
+      label: "Zabbix Server / Proxy version / Versión de Zabbix Server / Proxy"
+      description: "The central Zabbix instance this agent reports to. / La instancia Zabbix central a la que reporta este agente."
+      placeholder: "e.g. 6.0.42"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Affected area / Área afectada"
+      multiple: true
+      options:
+        - "Settings page / Página de Settings"
+        - "unraid.temperatures"
+        - "unraid.disks / unraid.disks.totals"
+        - "unraid.qemu (VMs)"
+        - "unraid.ups"
+        - "zabbix_template.xml (items/triggers)"
+        - "Live log viewer / Visor de logs en vivo"
+        - "Installation / update / Instalación / actualización"
+        - "Other / Otro"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected behavior / Comportamiento esperado"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "Actual behavior / Comportamiento real"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to reproduce / Pasos para reproducirlo"
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Relevant logs / Logs relevantes"
+      description: >
+        zabbix_agentd log (syslog or your configured log file), and/or the output of running the
+        relevant script by hand, e.g. `/usr/local/emhttp/plugins/zabbix_agent/scripts/ups.sh`.
+        Pega aquí el log de zabbix_agentd (syslog o tu fichero de log configurado), y/o la salida de
+        ejecutar a mano el script correspondiente, p.ej. `/usr/local/emhttp/plugins/zabbix_agent/scripts/ups.sh`.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Checks"
+      options:
+        - label: "I searched existing issues before opening this one. / Busqué en los issues existentes antes de abrir este."
+          required: true

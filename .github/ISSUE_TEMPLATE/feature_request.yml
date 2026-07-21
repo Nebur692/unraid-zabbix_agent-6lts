@@ -1,0 +1,25 @@
+name: "💡 Feature request / Sugerencia"
+description: "Suggest an improvement or a new monitored item. / Sugiere una mejora o un nuevo item monitorizado."
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: "What problem would this solve? / ¿Qué problema resolvería?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "What would you like to see? / ¿Qué te gustaría ver?"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Checks"
+      options:
+        - label: "I searched existing issues before opening this one. / Busqué en los issues existentes antes de abrir este."
+          required: true
