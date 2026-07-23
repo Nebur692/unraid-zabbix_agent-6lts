@@ -7,10 +7,10 @@
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.21.3">
+<!ENTITY version             "2026.07.23.1">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "7169da47428bbc38ede5673d5f796294">
+<!ENTITY packageMD5          "431c8380f72f95d679dd1e48fb789b19">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
@@ -51,6 +51,25 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
   cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
   Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
   instalable, así que no hizo falta subir de versión.
+
+### 2026.07.23.1
+- Fixed: the zero-setup "View live logs" link (`scripts/tail_syslog_filtered`) tailed the last 200 raw
+  syslog lines *before* filtering them down to the agent's own lines. Since the agent only logs on
+  start/stop/errors by default, other services can easily fill that 200-line window between agent
+  entries, so the terminal frequently opened showing nothing at all even though it was working
+  correctly — just waiting silently for the next matching line. Rewritten to first search a much larger
+  backfill window (3000 raw lines) for up to the last 50 matching lines and print those immediately,
+  then continue following live from that point — the window now shows recent activity right away
+  instead of looking broken.
+
+- Arreglado: el enlace "Ver logs en vivo — sin configurar nada" (`scripts/tail_syslog_filtered`) leía
+  las últimas 200 líneas *sin filtrar* del syslog y luego las filtraba a las del agente. Como el agente
+  por defecto solo escribe al arrancar/parar o si hay un error real, otros servicios pueden llenar
+  fácilmente esas 200 líneas entre dos entradas del agente, así que la consola a menudo se abría
+  totalmente vacía aunque estuviera funcionando bien — solo esperando en silencio la siguiente línea que
+  encajara. Reescrito para buscar primero en una ventana mucho más amplia (3000 líneas sin filtrar) hasta
+  las últimas 50 líneas que sí encajen y mostrarlas al instante, y a partir de ahí seguir en vivo — la
+  consola ahora muestra actividad reciente nada más abrirse, en vez de parecer rota.
 
 ### 2026.07.21.3
 - Fixed: `scripts/ups.sh` (backing the `unraid.ups` item) called `apcaccess`, which only returns data
