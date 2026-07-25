@@ -13,7 +13,7 @@
 <!ENTITY packageMD5          "431c8380f72f95d679dd1e48fb789b19">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" packageMD5="&packageMD5;">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" supportURL="https://forums.unraid.net/topic/200001-plugin-zabbix-agent-60-lts-nebur692/" packageMD5="&packageMD5;">
 
 <CHANGES>
 ## &name; (6lts fork)
