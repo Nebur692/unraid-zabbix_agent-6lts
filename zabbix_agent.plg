@@ -26,6 +26,16 @@ Este es un fork de [fabianonline/unraid-zabbix_agent](https://git.schle.nz/fabia
 mantenido aquí para dejar el agente empaquetado en la rama Zabbix 6.0 LTS y arreglar un par de bugs de
 larga duración. Todo el crédito del diseño original del plugin es de fabianonline.
 
+### Support thread link (2026.07.25, no package version bump)
+- Added `supportURL` pointing to this plugin's official Unraid forum support thread (there was none
+  before), so both Unraid's own Plugins page and the Community Applications listing show a real
+  support venue. Metadata-only change to the `.plg` header, so no package version bump was needed.
+
+- Añadido `supportURL` apuntando al hilo oficial de soporte de este plugin en el foro de Unraid
+  (antes no había ninguno), para que tanto la pestaña de Plugins de Unraid como el listado de
+  Community Applications muestren un canal de soporte real. Cambio solo de metadatos en la cabecera
+  del `.plg`, así que no hizo falta subir de versión del paquete.
+
 ### Template fix (2026.07.20, no package version bump — see below)
 - Fixed the "Temperature Mainboard" item (`unraid.temperatures[mainboard]`) in zabbix_template.xml:
   on hardware without a board sensor, the agent correctly reports `null`, but the item had no way to
