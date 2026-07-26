@@ -1,6 +1,6 @@
 <div align="center">
 
-# unraid-zabbix_agent-6lts
+# Unaraid Zabbix Agent 6 LTS
 
 *Zabbix 6.0 LTS agent for Unraid, with real hardware sensor fixes upstream never had*
 
