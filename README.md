@@ -6,6 +6,7 @@
 
 ![Release](https://img.shields.io/github/v/release/Nebur692/unraid-zabbix_agent-6lts?label=release&color=blue)
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nebur69265723)
+[![PayPal](https://img.shields.io/badge/PayPal-donate-00457C?logo=paypal&logoColor=white)](https://paypal.me/0SkillS)
 
 🇬🇧 [English](#english) · 🇪🇸 [Español](#español)
 
@@ -71,7 +72,7 @@ See the [releases](https://github.com/Nebur692/unraid-zabbix_agent-6lts/releases
 ### 💙 Support
 
 None of this would be possible without the community's support. If this project has been useful to you,
-consider [supporting it on Ko-fi](https://ko-fi.com/nebur69265723) — every bit helps keep it maintained.
+consider supporting it on [Ko-fi](https://ko-fi.com/nebur69265723) or [PayPal](https://paypal.me/0SkillS) — every bit helps keep it maintained.
 
 ---
 
@@ -137,5 +138,4 @@ changelog completo.
 
 ### 💙 Apoya el proyecto
 
-Sin el apoyo de la comunidad estos proyectos no serían posibles. Si te ha resultado útil, puedes
-[apoyarlo en Ko-fi](https://ko-fi.com/nebur69265723) — cualquier aportación ayuda a seguir manteniéndolo.
+Sin el apoyo de la comunidad estos proyectos no serían posibles. Si te ha resultado útil, puedes apoyarlo en [Ko-fi](https://ko-fi.com/nebur69265723) o [PayPal](https://paypal.me/0SkillS) — cualquier aportación ayuda a seguir manteniéndolo.
