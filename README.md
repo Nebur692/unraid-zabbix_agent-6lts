@@ -1,6 +1,15 @@
+<div align="center">
+
 # unraid-zabbix_agent-6lts
 
-🇬🇧 [English](#english) | 🇪🇸 [Español](#español)
+*Zabbix 6.0 LTS agent for Unraid, with real hardware sensor fixes upstream never had*
+
+![Release](https://img.shields.io/github/v/release/Nebur692/unraid-zabbix_agent-6lts?label=release&color=blue)
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nebur69265723)
+
+🇬🇧 [English](#english) · 🇪🇸 [Español](#español)
+
+</div>
 
 ---
 
@@ -14,7 +23,7 @@ All credit for the original plugin design goes to fabianonline. No license was d
 repository, so this fork is published with clear credit to the original author rather than any claim of
 authorship over the base plugin.
 
-### What changed from upstream
+### ✨ What's new
 
 - Updated the bundled `zabbix_agentd` from 5.2.1 (Nov 2020) to the official **6.0.47 LTS** static build.
 - Fixed `unraid.temperatures` (`temperatures.sh`): it only matched the literal `"CPU Temp:"` / `"MB Temp:"`
@@ -35,7 +44,7 @@ authorship over the base plugin.
   no need to enable file logging first.
 - The plugin now links directly to its Settings page when clicked from the Plugins tab.
 
-### Compatibility
+### ✅ Compatibility
 
 Developed and tested on **Unraid 7.3.2**. The plugin only relies on long-standing Dynamix webGUI mechanisms
 (`.page` files, `/update.php`, `dynamix.cfg`) that have been present throughout the Unraid 6.x and 7.x line,
@@ -43,7 +52,7 @@ so it should work on any reasonably recent 6.x/7.x install — it just hasn't be
 fork's maintainer. The pre-fork upstream project is known to have run on at least Unraid 6.12.6. If you try
 it on an older or newer release, please open an issue with the result.
 
-### Installing
+### 📦 Installation
 
 Plugin URL (Unraid → Plugins → Install Plugin):
 
@@ -59,6 +68,11 @@ https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main/zabbix_
 
 See the [releases](https://github.com/Nebur692/unraid-zabbix_agent-6lts/releases) page for the full changelog.
 
+### 💙 Support
+
+None of this would be possible without the community's support. If this project has been useful to you,
+consider [supporting it on Ko-fi](https://ko-fi.com/nebur69265723) — every bit helps keep it maintained.
+
 ---
 
 ## Español
@@ -72,7 +86,7 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
 declara ninguna licencia, así que este fork se publica dejando el crédito claro al autor original, sin
 reclamar autoría del plugin base.
 
-### Qué cambia respecto al original
+### ✨ Novedades
 
 - Actualizado el `zabbix_agentd` empaquetado de 5.2.1 (nov-2020) a la build oficial estática **6.0.47 LTS**.
 - Arreglado `unraid.temperatures` (`temperatures.sh`): solo reconocía las etiquetas literales `"CPU Temp:"` /
@@ -95,7 +109,7 @@ reclamar autoría del plugin base.
   a syslog, sin necesidad de activar antes el log a fichero.
 - El plugin ahora enlaza directamente a su página de Settings al hacer clic desde la pestaña Plugins.
 
-### Compatibilidad
+### ✅ Compatibilidad
 
 Desarrollado y probado en **Unraid 7.3.2**. El plugin solo depende de mecanismos del webGUI Dynamix que
 llevan presentes desde hace mucho en toda la línea 6.x y 7.x de Unraid (ficheros `.page`, `/update.php`,
@@ -104,7 +118,7 @@ que no se ha verificado por debajo de 7.3.2 por parte del mantenedor de este for
 (antes del fork) se sabe que funcionaba al menos en Unraid 6.12.6. Si lo pruebas en una versión más antigua
 o más nueva, abre un issue contando el resultado.
 
-### Instalación
+### 📦 Instalación
 
 URL del plugin (Unraid → Plugins → Install Plugin):
 
@@ -120,3 +134,8 @@ https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main/zabbix_
 
 Consulta la página de [releases](https://github.com/Nebur692/unraid-zabbix_agent-6lts/releases) para el
 changelog completo.
+
+### 💙 Apoya el proyecto
+
+Sin el apoyo de la comunidad estos proyectos no serían posibles. Si te ha resultado útil, puedes
+[apoyarlo en Ko-fi](https://ko-fi.com/nebur69265723) — cualquier aportación ayuda a seguir manteniéndolo.
