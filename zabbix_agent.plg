@@ -7,10 +7,10 @@
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.09.08">
+<!ENTITY version             "2026.09.08.1">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "593a28ee832c55f7c9879ac4a2dcefc7">
+<!ENTITY packageMD5          "c32ac83ed87fb11584af9a55d9de0c59">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" supportURL="https://forums.unraid.net/topic/200001-plugin-zabbix-agent-60-lts-nebur692/" packageMD5="&packageMD5;">
@@ -61,6 +61,30 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
   cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
   Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
   instalable, así que no hizo falta subir de versión.
+
+### 2026.09.08.1
+- Fixed: CPU temperature was reported as `null` on systems where lm-sensors writes `+54.0 C` instead
+  of `+54.0°C`. Which of the two you get depends on the locale of the calling process, and the agent
+  runs under `LC_ALL=C`, so this affected the agent while the same script looked fine when run by
+  hand from an interactive shell. Matching the degree sign was itself the problem: under `LC_ALL=C`
+  it is two bytes, so a pattern like `°?C` only makes its second byte optional and never matches.
+  The unit is no longer matched at all — anchoring on the signed decimal is correct in every locale.
+- Endurance items now come from their own `SSDs` discovery rule instead of hanging off `Disks`, so
+  they are only created for flash devices. On a 26-drive array that is 4 items instead of 104, with
+  the other 100 permanently empty. Unraid's own rotational flag decides, so discovery still probes
+  nothing and wakes nothing.
+
+- Arreglado: la temperatura de la CPU salía como `null` en sistemas donde lm-sensors escribe
+  `+54.0 C` en vez de `+54.0°C`. Cuál de las dos te toca depende del idioma configurado en el
+  proceso que llama, y el agente corre con `LC_ALL=C`, así que esto afectaba al agente mientras el
+  mismo script parecía correcto al ejecutarlo a mano desde una consola. El problema era justo buscar
+  el símbolo de grado: con `LC_ALL=C` ocupa dos bytes, así que un patrón como `°?C` solo hace
+  opcional el segundo byte y no casa nunca. Ya no se busca la unidad en absoluto — anclarse en el
+  número decimal con signo es correcto en cualquier idioma.
+- Los items de desgaste salen ahora de su propia regla de descubrimiento `SSDs` en vez de colgar de
+  `Disks`, así que solo se crean para dispositivos de memoria flash. En un array de 26 unidades eso
+  son 4 items en vez de 104, con los otros 100 vacíos para siempre. Lo decide la propia marca
+  rotational de Unraid, así que el descubrimiento sigue sin sondear ni despertar nada.
 
 ### 2026.09.08
 - New: SSD and NVMe endurance monitoring. A new `unraid.ssd[disk-id]` item reports how much of the

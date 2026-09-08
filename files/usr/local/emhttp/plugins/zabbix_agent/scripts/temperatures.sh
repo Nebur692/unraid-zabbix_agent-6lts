@@ -7,13 +7,17 @@ if [ "$error" -gt 0 ]; then
 fi
 
 first_temp() {
-        # Prints the first +NN.N°C (or -NN.N°C) value on the given line, without sign/unit.
-        local line="$1"
-        local temp
-        temp=$(grep -oE '[+-][0-9]+\.[0-9]+°C' <<< "$line" | head -1)
-        temp="${temp#+}"
-        temp="${temp%°C}"
-        echo "$temp"
+	# Prints the first temperature on the given line as a bare number.
+	# The unit is deliberately not matched: lm-sensors writes "+54.0°C" or
+	# "+54.0 C" depending on the locale of the calling process (the agent
+	# runs under LC_ALL=C and gets the latter), and matching the degree
+	# sign is itself locale-dependent — under LC_ALL=C it is two bytes, so
+	# a regex like "°?C" makes only its second byte optional and never
+	# matches. Anchoring on the signed decimal is correct in every locale.
+	local line="$1"
+	local temp
+	temp=$(grep -oE '[+-][0-9]+\.[0-9]+' <<< "$line" | head -1)
+	echo "${temp#+}"
 }
 
 max_temp() {

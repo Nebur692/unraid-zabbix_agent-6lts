@@ -1048,6 +1048,15 @@
                 </tag>
               </tags>
             </item_prototype>
+          </item_prototypes>
+        </discovery_rule>
+        <discovery_rule>
+          <uuid>caa693bd3a7a45378069759fc049299d</uuid>
+          <name>SSDs</name>
+          <key>unraid.ssds.discovery</key>
+          <delay>1h</delay>
+          <description>Discovers only flash-based devices, so endurance items are not created for spinning disks that would never report any.</description>
+          <item_prototypes>
             <item_prototype>
               <uuid>d3814d496dde41a693105bbdae4fc205</uuid>
               <name>Disk {#ID} endurance data</name>
