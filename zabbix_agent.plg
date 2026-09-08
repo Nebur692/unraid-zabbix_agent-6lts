@@ -7,10 +7,10 @@
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.07.23.1">
+<!ENTITY version             "2026.09.08">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "431c8380f72f95d679dd1e48fb789b19">
+<!ENTITY packageMD5          "593a28ee832c55f7c9879ac4a2dcefc7">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" supportURL="https://forums.unraid.net/topic/200001-plugin-zabbix-agent-60-lts-nebur692/" packageMD5="&packageMD5;">
@@ -61,6 +61,38 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
   cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
   Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
   instalable, así que no hizo falta subir de versión.
+
+### 2026.09.08
+- New: SSD and NVMe endurance monitoring. A new `unraid.ssd[disk-id]` item reports how much of the
+  drive's rated write endurance has been consumed and how many bytes have ever been written to it,
+  and the template turns that into three per-disk items (endurance used, total bytes written, and
+  write rate to flash) plus a warning at 80% endurance. The write rate item is worth watching on its
+  own: on a copy-on-write filesystem hosting databases, the bytes reaching the flash can be an order
+  of magnitude more than the useful data being stored, and nothing else on the dashboard shows that.
+- Spinning disks are skipped using Unraid's own `rotational` flag, and a disk that is currently spun
+  down is never read, so monitoring endurance does not keep an array awake. `smartctl` is also
+  called with `-n standby` as a second safety net, and results are cached for an hour because these
+  counters move very slowly. Reading every disk on a 25-drive array costs about 0.14 s in total.
+- NVMe drives report both figures from fields defined by the NVMe specification, so they are
+  reliable. SATA SSDs have no such standard and vendors disagree, so the common attributes are tried
+  and the item is simply left empty when none of them is present, rather than reporting a guess.
+
+- Nuevo: vigilancia del desgaste de discos SSD y NVMe. Un item nuevo `unraid.ssd[disk-id]`
+  informa de qué parte de la vida de escritura que le calcula el fabricante lleva consumida el disco
+  y de cuántos bytes se le han escrito en total, y la plantilla lo convierte en tres items por disco
+  (vida consumida, total escrito y ritmo de escritura a la memoria flash) más un aviso al llegar al
+  80%. El del ritmo de escritura merece mirarse por sí solo: en un sistema de ficheros de copia al
+  escribir con bases de datos encima, los bytes que llegan a la flash pueden ser diez veces más que
+  los datos útiles que se guardan, y eso no se ve en ningún otro sitio del panel.
+- Los discos mecánicos se descartan usando la propia marca `rotational` de Unraid, y un disco que
+  esté parado no se lee nunca, así que vigilar el desgaste no mantiene el array despierto. Además se
+  llama a `smartctl` con `-n standby` como segunda red de seguridad, y el resultado se guarda en
+  caché una hora porque estos contadores se mueven muy despacio. Leer todos los discos de un array de
+  25 unidades cuesta unos 0,14 s en total.
+- Los discos NVMe dan las dos cifras desde campos definidos por la especificación NVMe, así que son
+  fiables. Los SSD SATA no tienen ese estándar y cada fabricante hace la guerra por su cuenta, así
+  que se prueban los atributos habituales y, si no aparece ninguno, el item se deja vacío en vez de
+  informar de una suposición.
 
 ### 2026.07.23.1
 - Fixed: the zero-setup "View live logs" link (`scripts/tail_syslog_filtered`) tailed the last 200 raw

@@ -1048,6 +1048,126 @@
                 </tag>
               </tags>
             </item_prototype>
+            <item_prototype>
+              <uuid>d3814d496dde41a693105bbdae4fc205</uuid>
+              <name>Disk {#ID} endurance data</name>
+              <key>unraid.ssd[{#ID}]</key>
+              <delay>1h</delay>
+              <history>0</history>
+              <trends>0</trends>
+              <value_type>TEXT</value_type>
+              <description>Raw SSD/NVMe endurance data. Spinning disks and drives that are spun down report supported:0 and are never woken up to be read.</description>
+              <tags>
+                <tag>
+                  <tag>Application</tag>
+                  <value>Disks</value>
+                </tag>
+              </tags>
+            </item_prototype>
+            <item_prototype>
+              <uuid>9261f1077e0f471a81df907425bfe74c</uuid>
+              <name>Disk {#ID} endurance used</name>
+              <type>DEPENDENT</type>
+              <key>unraid.ssd[{#ID},wear]</key>
+              <delay>0</delay>
+              <units>%</units>
+              <description>Percentage of the manufacturer's rated write endurance consumed. 100% does not mean the drive is dead, only that it has passed its rated TBW. Empty on spinning disks and on SSDs that do not report it.</description>
+              <preprocessing>
+                <step>
+                  <type>JSONPATH</type>
+                  <parameters>
+                    <parameter>$.wear</parameter>
+                  </parameters>
+                </step>
+                <step>
+                  <type>NOT_MATCHES_REGEX</type>
+                  <parameters>
+                    <parameter>^-1$</parameter>
+                  </parameters>
+                  <error_handler>DISCARD_VALUE</error_handler>
+                </step>
+              </preprocessing>
+              <master_item>
+                <key>unraid.ssd[{#ID}]</key>
+              </master_item>
+              <tags>
+                <tag>
+                  <tag>Application</tag>
+                  <value>Disks</value>
+                </tag>
+              </tags>
+              <trigger_prototypes>
+                <trigger_prototype>
+                  <uuid>f3f6f5afa1204bf4b25648f9066d8ea9</uuid>
+                  <expression>last(/Unraid server/unraid.ssd[{#ID},wear])&gt;=80</expression>
+                  <recovery_mode>NONE</recovery_mode>
+                  <name>Disk {#ID} has used {ITEM.VALUE} of its rated write endurance</name>
+                  <priority>WARNING</priority>
+                  <manual_close>YES</manual_close>
+                  <description>The drive has passed 80% of the write endurance its manufacturer rates it for. Nothing needs doing today: reaching 100% does not mean the drive fails, only that it is no longer guaranteed. Treat this as the moment to plan a replacement, not as an emergency.</description>
+                </trigger_prototype>
+              </trigger_prototypes>
+            </item_prototype>
+            <item_prototype>
+              <uuid>282625c3c5c74c349ff4186cae6c6e6e</uuid>
+              <name>Disk {#ID} total bytes written</name>
+              <type>DEPENDENT</type>
+              <key>unraid.ssd[{#ID},written]</key>
+              <delay>0</delay>
+              <units>B</units>
+              <description>Total bytes ever written to the drive, as reported by SMART. Compare against the manufacturer's TBW rating.</description>
+              <preprocessing>
+                <step>
+                  <type>JSONPATH</type>
+                  <parameters>
+                    <parameter>$.written</parameter>
+                  </parameters>
+                </step>
+                <step>
+                  <type>NOT_MATCHES_REGEX</type>
+                  <parameters>
+                    <parameter>^-1$</parameter>
+                  </parameters>
+                  <error_handler>DISCARD_VALUE</error_handler>
+                </step>
+              </preprocessing>
+              <master_item>
+                <key>unraid.ssd[{#ID}]</key>
+              </master_item>
+              <tags>
+                <tag>
+                  <tag>Application</tag>
+                  <value>Disks</value>
+                </tag>
+              </tags>
+            </item_prototype>
+            <item_prototype>
+              <uuid>962082705b654c17a6536cab670bd974</uuid>
+              <name>Disk {#ID} write rate to flash</name>
+              <type>DEPENDENT</type>
+              <key>unraid.ssd[{#ID},write_rate]</key>
+              <delay>0</delay>
+              <value_type>FLOAT</value_type>
+              <units>Bps</units>
+              <description>How fast the drive is actually being written to, derived from the SMART counter. This is what wears the flash out, and it can be far higher than the amount of useful data being stored: copy-on-write filesystems and databases amplify small writes considerably.</description>
+              <preprocessing>
+                <step>
+                  <type>CHANGE_PER_SECOND</type>
+                  <parameters>
+                    <parameter/>
+                  </parameters>
+                </step>
+              </preprocessing>
+              <master_item>
+                <key>unraid.ssd[{#ID},written]</key>
+              </master_item>
+              <tags>
+                <tag>
+                  <tag>Application</tag>
+                  <value>Disks</value>
+                </tag>
+              </tags>
+            </item_prototype>
           </item_prototypes>
         </discovery_rule>
         <discovery_rule>
