@@ -7,10 +7,10 @@
 <!ENTITY launch              "Settings/ZabbixSettings">
 <!ENTITY baseURL             "https://raw.githubusercontent.com/Nebur692/unraid-zabbix_agent-6lts/main">
 <!ENTITY pluginURL           "&baseURL;/zabbix_agent.plg">
-<!ENTITY version             "2026.09.08.1">
+<!ENTITY version             "2026.09.08.2">
 <!ENTITY packageName         "zabbix_agent-&version;-x86_64-1.txz">
 <!ENTITY packageURL          "&baseURL;/&packageName;">
-<!ENTITY packageMD5          "c32ac83ed87fb11584af9a55d9de0c59">
+<!ENTITY packageMD5          "624b76e68cd4c612882052b115caeb29">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" supportURL="https://forums.unraid.net/topic/200001-plugin-zabbix-agent-60-lts-nebur692/" packageMD5="&packageMD5;">
@@ -61,6 +61,16 @@ larga duración. Todo el crédito del diseño original del plugin es de fabianon
   cubierta por el manejador de error de ese paso — hace falta un paso de validación aparte después.
   Igual que el fix de template de 2026.07.20.1, esto solo toca zabbix_template.xml, no el paquete
   instalable, así que no hizo falta subir de versión.
+
+### 2026.09.08.2
+- Fixed: the endurance cache lasted exactly as long as the poll interval of the item that reads it,
+  so any jitter in the poll could serve a cached value, make the delta come out as zero and report a
+  write rate that never happened. The cache TTL is now half the interval.
+
+- Arreglado: la caché del desgaste duraba exactamente lo mismo que el intervalo del item que la lee,
+  así que cualquier desajuste en el sondeo podía servir un valor cacheado, hacer que la diferencia
+  saliera cero e informar de un ritmo de escritura que nunca ocurrió. Ahora la caché dura la mitad
+  que el intervalo.
 
 ### 2026.09.08.1
 - Fixed: CPU temperature was reported as `null` on systems where lm-sensors writes `+54.0 C` instead

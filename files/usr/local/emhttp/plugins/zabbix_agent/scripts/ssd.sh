@@ -14,11 +14,14 @@
 # read a counter that moves once a month would cost far more than the data
 # is worth. smartctl is additionally called with -n standby as a safety net.
 #
-# Results are cached for an hour, for the same reason.
+# Results are cached, for the same reason. The TTL is deliberately shorter
+# than the hourly poll interval of the item: if the two matched, any jitter
+# in the poll would serve a cached value, make the delta come out as zero and
+# report a write rate that never happened.
 
 id="$1"
 CACHE_DIR="/var/tmp/zabbix_agent_ssd"
-CACHE_TTL=3600
+CACHE_TTL=1800
 DISKS_INI="/var/local/emhttp/disks.ini"
 
 unsupported='{"supported":0, "wear":-1, "written":-1}'
